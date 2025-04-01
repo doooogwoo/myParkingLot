@@ -1,0 +1,61 @@
+@startuml
+
+entity ParkingLot {
+    +id: BIGINT [PK]
+    --
+    +name: VARCHAR(255)
+    +totalSpaces: INT
+    +handicapSpaces: INT
+    +indoor: BOOLEAN
+    +floors: INT
+    +createdAt: DATETIME
+}
+
+entity ParkingSpace {
+    +id: BIGINT [PK]
+    --
+    +parkingLotId: BIGINT [FK]
+    +spaceType: ENUM('regular', 'handicap')
+    +status: ENUM('available', 'occupied')
+}
+
+entity Vehicle {
+    +id: BIGINT [PK]
+    --
+    +licensePlate: VARCHAR(20)
+    +type: ENUM('small', 'medium', 'large')
+    +enterDay: INT
+    +enterHour: INT
+    +parkingDuration: INT
+    +parkingLotId: BIGINT [FK]
+}
+
+entity ParkingTicket {
+    +id: BIGINT [PK]
+    --
+    +vehicleId: BIGINT [FK]
+    +issuedAt: DATETIME
+    +exitDay: INT
+    +exitHour: INT
+    +totalFee: DECIMAL(10,2)
+}
+
+entity GameClock {
+    +id: INT [PK]
+    --
+    +currentDay: INT
+    +currentHour: INT
+}
+
+entity ParkingDemand {
+    +id: INT [PK]
+    --
+    +day: INT
+    +hour: INT
+    +expectedCars: INT
+}
+
+ParkingLot ||--|{ ParkingSpace : has
+ParkingLot ||--|{ Vehicle : manages
+Vehicle ||--|| ParkingTicket : generates
+@enduml
