@@ -1,0 +1,76 @@
+@startuml
+
+class ParkingLot {
+    Long parkingLotId
+    String parkingLotName
+    int capacity
+    int income
+    int expenses
+    int floors
+    String events
+    boolean isFull
+    boolean isHandicapFull
+    boolean isElectricFull
+    double handicapBonus
+    List<ParkingSpace> parkingSpaceList
+    ParkingTicket parkingTicket
+    Player player
+}
+
+class ParkingSpace {
+    Long parkingSpaceId
+    ParkingSpaceType parkingSpaceType
+    boolean isOccupied
+    int spaceIncome
+    Vehicle vehicle
+    ParkingLot parkingLot
+}
+
+class ParkingSpaceType {
+}
+
+class ParkingTicket {
+    Long parkingTicketId
+    int fee
+    double discount
+    ParkingLot parkingLot
+}
+
+class Player {
+    Integer playerId
+    int balance
+    List<ParkingLot> ownedParkingLots
+}
+
+class TimeRecord {
+    int timeId
+    LocalDateTime lastGameTime
+    long lastRealTimestamp
+}
+
+class Vehicle {
+    Long vehicleId
+    String license
+    boolean handicapped
+    boolean electricVehicle
+    VehicleType vehicleType
+    LocalDateTime vehicleEnterTime
+    Duration parkingDuration//停多久
+    LocalDateTime vehicleLeaveTime//出場
+    ParkingSpace parkingSpace
+}
+
+class VehicleType {
+}
+
+ParkingLot "1" --> "*" ParkingSpace : contains
+ParkingLot "1" --> "1" ParkingTicket : defines
+ParkingLot "1" --> "1" Player : owned by
+ParkingSpace "1" --> "1" ParkingLot : belongs to
+ParkingSpace "1" --> "0..1" Vehicle : occupied by
+Vehicle "1" --> "1" ParkingSpace : parked at
+Vehicle "1" --> "0..1" VehicleType : type of
+ParkingTicket "1" --> "1" ParkingLot : applies to
+Player "1" --> "*" ParkingLot : owns
+
+@enduml

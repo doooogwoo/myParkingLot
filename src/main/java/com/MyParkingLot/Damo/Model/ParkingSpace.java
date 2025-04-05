@@ -23,9 +23,13 @@ public class ParkingSpace {
 
     @OneToOne
     @JoinColumn(name = "vehicle_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Vehicle vehicle;
 
     @ManyToOne
     @JoinColumn(name = "parkingLot_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private ParkingLot parkingLot;
 }

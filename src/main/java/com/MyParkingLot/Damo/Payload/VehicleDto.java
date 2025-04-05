@@ -23,7 +23,7 @@ public class VehicleDto {
 
     private VehicleType vehicleType;
 
-    private ParkingSpaceDto parkingSpaceDto;
+    private Long parkingSpaceDtoId;
 
     @Override
     public String toString() {

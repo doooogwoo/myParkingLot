@@ -1,15 +1,16 @@
 package com.MyParkingLot.Damo.Service.parkingTicket;
 
+import com.MyParkingLot.Damo.Factory.ParkingTicketFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 @Service
 public class ParkingTicketServiceImpl implements ParkingTicketService{
-   private final ParkingTicketGenerate ticketGenerate;
+   private final ParkingTicketFactory ticketGenerate;
    @Autowired
-    public ParkingTicketServiceImpl(ParkingTicketGenerate parkingTicketGenerate) {
-        this.ticketGenerate = parkingTicketGenerate;
+    public ParkingTicketServiceImpl(ParkingTicketFactory parkingTicketFactory) {
+        this.ticketGenerate = parkingTicketFactory;
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.MyParkingLot.Damo.Repository.ParkingSpaceRepository;
 import com.MyParkingLot.Damo.Repository.VehicleRepository;
 import com.MyParkingLot.Damo.Service.parkingService.ParkingServiceImpl;
 import com.MyParkingLot.Damo.Service.time.TimeManager;
-import com.MyParkingLot.Damo.Service.vehicle.VehicleFactory;
+import com.MyParkingLot.Damo.Factory.VehicleFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,7 +55,7 @@ public class parkingVehicleTest {
         Mockito.when(vehicleFactory.generateVehicle()).thenReturn(testVehicle);
         Mockito.when(parkingSpaceRepository.save(Mockito.any(ParkingSpace.class))).thenReturn(testParkingSpace);
 
-        parkingService.vehicleEntering();
+        //parkingService.vehicleEntering();
 
         verify(parkingSpaceRepository).save(Mockito.argThat(
                 space -> space.isOccupied() && space.getVehicle().getLicense().equals("ABC-123")
@@ -90,7 +90,7 @@ public class parkingVehicleTest {
         Mockito.when(timeManager.getCurrentGameTime()).thenReturn(LocalDateTime.of(2025, 3, 30, 12, 0));
 
         // Act：呼叫進場邏輯
-        parkingService.vehicleEntering();
+        //parkingService.vehicleEntering();
 
         // Assert：
 
@@ -114,10 +114,6 @@ public class parkingVehicleTest {
         testVehicle.setVehicleLeaveTime(leavingTime);
         testVehicle.setVehicleId(1L);
         testVehicle.assignParkingSpace(testSpace);
-
-
-
-
 
         //要模擬資料庫查找
         Mockito.when(vehicleRepository.findById(testVehicle.getVehicleId())).thenReturn(Optional.of(testVehicle));

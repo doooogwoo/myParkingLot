@@ -1,4 +1,4 @@
-package com.MyParkingLot.Damo.Service.vehicle;
+package com.MyParkingLot.Damo.Factory;
 
 import com.MyParkingLot.Damo.Model.Vehicle;
 import com.MyParkingLot.Damo.Model.VehicleType;

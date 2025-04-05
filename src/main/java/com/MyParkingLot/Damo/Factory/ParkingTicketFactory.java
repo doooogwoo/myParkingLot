@@ -1,4 +1,4 @@
-package com.MyParkingLot.Damo.Service.parkingTicket;
+package com.MyParkingLot.Damo.Factory;
 
 import com.MyParkingLot.Damo.Exception.ResourceNotFoundException;
 import com.MyParkingLot.Damo.Model.ParkingLot;
@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ParkingTicketGenerate {
+public class ParkingTicketFactory {
     private final ParkingTicketRepository parkingTicketRepository;
     @Autowired
-    public ParkingTicketGenerate(ParkingTicketRepository parkingTicketRepository) {
+    public ParkingTicketFactory(ParkingTicketRepository parkingTicketRepository) {
         this.parkingTicketRepository = parkingTicketRepository;
     }
 

@@ -1,11 +1,8 @@
-package com.MyParkingLot.Damo.Service.parkingLot;
+package com.MyParkingLot.Damo.Factory;
 
 import com.MyParkingLot.Damo.Model.ParkingLot;
 import com.MyParkingLot.Damo.Model.ParkingSpace;
-import com.MyParkingLot.Damo.Payload.ParkingLotDto;
 import com.MyParkingLot.Damo.Repository.ParkingLotRepository;
-import com.MyParkingLot.Damo.Service.parkingSpace.SpaceGenerate;
-import com.MyParkingLot.Damo.Service.parkingTicket.ParkingTicketGenerate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,17 +10,17 @@ import java.util.List;
 
 @Component
 //@RequiredArgsConstructor //→ 自動幫我生成一個「只包含 final 欄位」的建構子
-public class ParkingLotUtil {
+public class ParkingLotFactory {
     private final ParkingLotRepository parkingLotRepository;
-    private final SpaceGenerate spaceGenerate;
-    private final ParkingTicketGenerate parkingTicketGenerate;
+    private final SpaceFactory spaceFactory;
+    private final ParkingTicketFactory parkingTicketFactory;
     @Autowired
-    public ParkingLotUtil(ParkingLotRepository parkingLotRepository,
-                          SpaceGenerate spaceGenerate,
-                          ParkingTicketGenerate parkingTicketGenerate){
+    public ParkingLotFactory(ParkingLotRepository parkingLotRepository,
+                             SpaceFactory spaceFactory,
+                             ParkingTicketFactory parkingTicketFactory){
         this.parkingLotRepository = parkingLotRepository;
-        this.spaceGenerate = spaceGenerate;
-        this.parkingTicketGenerate = parkingTicketGenerate;
+        this.spaceFactory = spaceFactory;
+        this.parkingTicketFactory = parkingTicketFactory;
     }
     public void initParkingLot(String parkingLotname){
         ParkingLot parkingLot = new ParkingLot();
@@ -34,8 +31,8 @@ public class ParkingLotUtil {
 
         parkingLotRepository.save(parkingLot);
 
-        parkingTicketGenerate.generateTicket(parkingLot);
-        List<ParkingSpace> buildSpace = spaceGenerate.generateSpaces(parkingLot,parkingLot.getCapacity());
+        parkingTicketFactory.generateTicket(parkingLot);
+        List<ParkingSpace> buildSpace = spaceFactory.generateSpaces(parkingLot,parkingLot.getCapacity());
         parkingLot.setParkingSpaceList(buildSpace);
 
         parkingLotRepository.save(parkingLot);
@@ -50,8 +47,8 @@ public class ParkingLotUtil {
 
         parkingLotRepository.save(parkingLot);
 
-        parkingTicketGenerate.setFee(parkingLot.getParkingLotId(), ticketPrice);
-        List<ParkingSpace> buildSpace = spaceGenerate.generateSpaces(parkingLot,parkingLot.getCapacity());
+        parkingTicketFactory.setFee(parkingLot.getParkingLotId(), ticketPrice);
+        List<ParkingSpace> buildSpace = spaceFactory.generateSpaces(parkingLot,parkingLot.getCapacity());
         parkingLot.setParkingSpaceList(buildSpace);
 
         parkingLotRepository.save(parkingLot);

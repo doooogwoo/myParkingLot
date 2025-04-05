@@ -1,9 +1,7 @@
 package com.MyParkingLot.Damo.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -22,10 +20,10 @@ public class Vehicle {
     private String license;
 
     @Column(name = "is_handicapped", nullable = false)
-    private boolean handicapped;
+    private boolean isHandicapped;
 
     @Column(name = "is_electric_vehicle", nullable = false)
-    private boolean electricVehicle;
+    private boolean isElectricVehicle;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -37,7 +35,15 @@ public class Vehicle {
 
     // 非擁有方（由 ParkingSpace 控制關聯）
     @OneToOne(mappedBy = "vehicle")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private ParkingSpace parkingSpace;
+
+    @ManyToOne
+    @JoinColumn(name = "parking_lot_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private ParkingLot parkingLot;
 
 
     public void assignParkingSpace(ParkingSpace parkingSpace){

@@ -1,5 +1,6 @@
 package com.MyParkingLot.Damo.Service.vehicle;
 
+import com.MyParkingLot.Damo.Factory.VehicleFactory;
 import com.MyParkingLot.Damo.Model.Vehicle;
 import com.MyParkingLot.Damo.Payload.VehicleDto;
 import com.MyParkingLot.Damo.Repository.VehicleRepository;

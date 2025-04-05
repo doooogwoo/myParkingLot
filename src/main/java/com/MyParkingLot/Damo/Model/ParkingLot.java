@@ -1,9 +1,7 @@
 package com.MyParkingLot.Damo.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +27,18 @@ public class ParkingLot {
     private double handicapBonus;
 
     @OneToMany(mappedBy = "parkingLot")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
     @OneToOne(mappedBy = "parkingLot")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private ParkingTicket parkingTicket;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Player player;
 }

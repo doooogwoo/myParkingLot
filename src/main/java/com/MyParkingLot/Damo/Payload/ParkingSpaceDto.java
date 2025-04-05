@@ -11,5 +11,5 @@ public class ParkingSpaceDto {
     private boolean isOccupied;
     private int spaceIncome;
     private VehicleDto vehicleDto;
-    private ParkingLotDto parkingLotDto;
+    private Long parkingLotDtoId;
 }

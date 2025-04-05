@@ -1,4 +1,4 @@
-package com.MyParkingLot.Damo.Service.parkingSpace;
+package com.MyParkingLot.Damo.Factory;
 
 import com.MyParkingLot.Damo.Model.ParkingLot;
 import com.MyParkingLot.Damo.Model.ParkingSpace;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SpaceGenerate {
+public class SpaceFactory {
     private final ParkingSpaceRepository parkingSpaceRepository;
     @Autowired
-    public SpaceGenerate(ParkingSpaceRepository parkingSpaceRepository) {
+    public SpaceFactory(ParkingSpaceRepository parkingSpaceRepository) {
         this.parkingSpaceRepository = parkingSpaceRepository;
     }
 

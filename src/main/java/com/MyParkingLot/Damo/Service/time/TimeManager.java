@@ -1,11 +1,15 @@
 package com.MyParkingLot.Damo.Service.time;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
+@Slf4j
 public class TimeManager {
     private static final int TIME_SCALE = 240; // 1 秒 = 4 分鐘
     private LocalDateTime gameStartTime;
+    private final LocalDateTime INIT_GAME_TIME = LocalDateTime.of(2030, 4, 5, 0, 0);
     private long startNanoTime;
 
     public void initGameTime(LocalDateTime savedGameTime, long savedRealTimestamp) {
@@ -13,11 +17,20 @@ public class TimeManager {
         this.startNanoTime = System.nanoTime() - ((System.currentTimeMillis() - savedRealTimestamp) * 1_000_000);
     }
 
+    @PostConstruct
+    public void initDefaultTimeIfNeeded() {
+        if (this.gameStartTime == null) {
+            initGameTime(INIT_GAME_TIME, System.currentTimeMillis());
+        }
+        log.info("時間初始化完成: {}",INIT_GAME_TIME);
+    }
+
+
     public LocalDateTime getCurrentGameTime() {
-        System.out.println("startNanoTime" + startNanoTime);
+        log.info("startNanoTime: {}",startNanoTime);
         long elapsedRealSeconds = (System.nanoTime() - startNanoTime) / 1_000_000_000;
         long elapsedGameSeconds = elapsedRealSeconds * TIME_SCALE;
-        System.out.println("getCurrentGameTime測試" + elapsedGameSeconds);
+        log.info("getCurrentGameTime 測試: {}",elapsedGameSeconds);
         return gameStartTime.plusSeconds(elapsedGameSeconds);
     }
 }

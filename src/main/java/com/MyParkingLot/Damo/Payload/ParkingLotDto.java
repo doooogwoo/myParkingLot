@@ -15,6 +15,8 @@ public class ParkingLotDto {
     private boolean isFull;
     private boolean isHandicapFull;
     private boolean isElectricFull;
+    private ParkingTicketDto parkingTicketDto;
+    private Long playerId;
     private List<ParkingSpaceDto> parkingSpaceList;
 
 }
