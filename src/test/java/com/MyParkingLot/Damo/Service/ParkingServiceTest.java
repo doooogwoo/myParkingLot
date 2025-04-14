@@ -1,10 +1,10 @@
 package com.MyParkingLot.Damo.Service;
 
-import com.MyParkingLot.Damo.Factory.VehicleFactory;
-import com.MyParkingLot.Damo.Model.ParkingSpace;
-import com.MyParkingLot.Damo.Model.Vehicle;
+import com.MyParkingLot.Damo.Service.factory.VehicleFactory;
+import com.MyParkingLot.Damo.domain.Model.ParkingSpace;
+import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import com.MyParkingLot.Damo.Repository.VehicleRepository;
-import com.MyParkingLot.Damo.Service.parkingService.ParkingService;
+import com.MyParkingLot.Damo.Service.orchestrator.parkingService.ParkingService;
 import com.MyParkingLot.Damo.Service.time.TimeManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ public class ParkingServiceTest {
         Vehicle vehicle = vehicleFactory.generateVehicle();
 
         vehicle.setParkingDuration(Duration.ofHours(3));
-        vehicle.setVehicleLeaveTime(vehicle.getVehicleEnterTime().plusHours(3));
+        vehicle.setExpectedVehicleLeaveTime(vehicle.getVehicleEnterTime().plusHours(3));
         vehicleRepository.save(vehicle);
 
         parkingService.vehicleEntering(vehicle);
@@ -50,7 +50,7 @@ public class ParkingServiceTest {
 
         ParkingSpace space = vehicle.getParkingSpace();
 
-        int fee = space.getParkingLot().getParkingTicket().getFee();
+        int fee = space.getParkingLot().getParkingTicket().getRate();
 
         parkingService.vehicleLeaving(vehicle.getVehicleId());
 
@@ -59,4 +59,5 @@ public class ParkingServiceTest {
 
         assertEquals(3 * fee, income);
     }
+
 }

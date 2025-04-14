@@ -1,6 +1,7 @@
 package com.MyParkingLot.Damo.Service.vehicle;
 
-import com.MyParkingLot.Damo.Payload.VehicleDto;
+import com.MyParkingLot.Damo.Payload.dto.VehicleDto;
+import com.MyParkingLot.Damo.Service.logic.VehicleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

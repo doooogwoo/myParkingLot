@@ -1,6 +1,6 @@
 package com.MyParkingLot.Damo.Repository;
 
-import com.MyParkingLot.Damo.Model.TimeRecord;
+import com.MyParkingLot.Damo.domain.Model.TimeRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

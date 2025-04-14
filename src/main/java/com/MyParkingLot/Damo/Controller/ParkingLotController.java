@@ -1,14 +1,14 @@
 package com.MyParkingLot.Damo.Controller;
 
-import com.MyParkingLot.Damo.Payload.ParkingLotDto;
-import com.MyParkingLot.Damo.Service.parkingLot.ParkingLotService;
+import com.MyParkingLot.Damo.Payload.dto.ParkingLotDto;
+import com.MyParkingLot.Damo.Service.logic.ParkingLotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/parkingLot")
+@RequestMapping("/api/parkingLot")
 public class ParkingLotController {
     private final ParkingLotService parkingLotService;
     @Autowired
@@ -28,5 +28,11 @@ public class ParkingLotController {
        parkingLotService.buildParkingLot(parkingLotName,ticketFee);
        String message = "build success" ;
         return new ResponseEntity<String> (message,HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getInfoBy/{id}")
+    public ResponseEntity<ParkingLotDto> getParkingLotInfoById(@PathVariable Long id){
+        ParkingLotDto parkingLotDto = parkingLotService.getParkingLotInfoById(id);
+        return new  ResponseEntity<ParkingLotDto>(parkingLotDto,HttpStatus.OK);
     }
 }

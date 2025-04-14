@@ -1,6 +1,6 @@
 package com.MyParkingLot.Damo.Service.time;
 
-import com.MyParkingLot.Damo.Payload.TimeDto;
+import com.MyParkingLot.Damo.Payload.dto.TimeDto;
 
 
 public interface TimeService {

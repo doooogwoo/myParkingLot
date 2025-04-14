@@ -1,13 +1,13 @@
 package com.MyParkingLot.Damo.Service.parkingVehicle;
 
-import com.MyParkingLot.Damo.Model.ParkingSpace;
-import com.MyParkingLot.Damo.Model.Vehicle;
-import com.MyParkingLot.Damo.Model.VehicleType;
+import com.MyParkingLot.Damo.domain.Model.ParkingSpace;
+import com.MyParkingLot.Damo.domain.Model.Vehicle;
+import com.MyParkingLot.Damo.domain.Model.VehicleType;
 import com.MyParkingLot.Damo.Repository.ParkingSpaceRepository;
 import com.MyParkingLot.Damo.Repository.VehicleRepository;
-import com.MyParkingLot.Damo.Service.parkingService.ParkingServiceImpl;
+import com.MyParkingLot.Damo.Service.orchestrator.parkingService.ParkingServiceImpl;
 import com.MyParkingLot.Damo.Service.time.TimeManager;
-import com.MyParkingLot.Damo.Factory.VehicleFactory;
+import com.MyParkingLot.Damo.Service.factory.VehicleFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -111,7 +111,7 @@ public class parkingVehicleTest {
         Vehicle testVehicle = new Vehicle();
         testVehicle.setLicense("ABC-123");
         LocalDateTime leavingTime = LocalDateTime.now().minusHours(5);
-        testVehicle.setVehicleLeaveTime(leavingTime);
+        testVehicle.setExpectedVehicleLeaveTime(leavingTime);
         testVehicle.setVehicleId(1L);
         testVehicle.assignParkingSpace(testSpace);
 
@@ -125,7 +125,7 @@ public class parkingVehicleTest {
         assertFalse(testSpace.isOccupied());
 
         //離場時間
-        assertEquals(leavingTime,testVehicle.getVehicleLeaveTime());
+        assertEquals(leavingTime,testVehicle.getExpectedVehicleLeaveTime());
 
         verify(vehicleRepository).save(testVehicle);
         verify(parkingSpaceRepository).save(testSpace);

@@ -1,6 +1,6 @@
 package com.MyParkingLot.Damo.Controller;
 
-import com.MyParkingLot.Damo.Payload.TimeDto;
+import com.MyParkingLot.Damo.Payload.dto.TimeDto;
 import com.MyParkingLot.Damo.Service.time.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

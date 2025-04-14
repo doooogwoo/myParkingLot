@@ -1,8 +1,8 @@
 package com.MyParkingLot.Damo.Controller;
 
 
-import com.MyParkingLot.Damo.Payload.VehicleDto;
-import com.MyParkingLot.Damo.Service.vehicle.VehicleService;
+import com.MyParkingLot.Damo.Payload.dto.VehicleDto;
+import com.MyParkingLot.Damo.Service.logic.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
