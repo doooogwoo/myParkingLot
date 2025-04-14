@@ -1,5 +1,7 @@
 package com.MyParkingLot.Damo.domain.Model;
 
+import com.MyParkingLot.Damo.Exception.BusinessException;
+import com.MyParkingLot.Damo.Exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,4 +34,33 @@ public class ParkingSpace {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private ParkingLot parkingLot;
+
+    public void assignVehicle(Vehicle vehicle) {
+        if (this.isOccupied()) {
+            throw new BusinessException(ErrorCode.SPACE_ALREADY_OCCUPIED);
+        }
+
+        if (this.parkingSpaceType == ParkingSpaceType.HandicappedParkingSpace && !vehicle.isHandicapped()) {
+            throw new BusinessException(ErrorCode.VEHICLE_ENTER_NOT_Handicapped);
+        }
+
+        if (this.parkingSpaceType == ParkingSpaceType.ElectricParkingSpace && !vehicle.isElectricVehicle()) {
+            throw new BusinessException(ErrorCode.VEHICLE_ENTER_NOT_Electric);
+        }
+
+        this.setOccupied(true);
+        this.setVehicle(vehicle);
+        vehicle.setParkingSpace(this);
+    }
+
+    public void unassignVehicle(){
+        if (!this.isOccupied() || this.vehicle == null) {
+            throw new BusinessException(ErrorCode.VEHICLE_LEAVE_SPACE_IS_EMPTY);
+        }
+
+        this.setOccupied(false);
+        this.vehicle.setParkingSpace(null);
+        this.setVehicle(null);
+    }
+
 }
