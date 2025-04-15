@@ -31,17 +31,26 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingTicketServiceImpl parkingTicketService;
     private final ParkingLotRepository parkingLotRepository;
     private final FeeStrategyFactory feeStrategyFactory;
-    private final ParkingServiceFactory parkingServiceFactory;
 
     @Transactional
     @Override //（指派 → 設定 → 驗證 → 儲存）
     public void vehicleEntering(Vehicle vehicle) {
-        ParkingSpace parkingSpace = parkingServiceFactory.assignSpace(vehicle);
-
-        parkingSpace.assignVehicle(vehicle);
-
         vehicleRepository.save(vehicle);
-        parkingSpaceRepository.save(parkingSpace);
+        ParkingSpace space = assignSpace(vehicle);
+        if (space == null) {
+            log.info("🚫 停車場已滿，車輛 {} 放棄進場", vehicle.getLicense());
+
+            vehicleRepository.delete(vehicle);//進場失敗，直接刪除資料
+            return;
+        }
+        vehicleRepository.save(vehicle);
+        space.assignVehicle(vehicle);
+        parkingSpaceRepository.save(space);
+        log.info("✅ 車輛 {} 成功進場，進入停車場 {}，停在車位 {} (樓層 {})",
+                vehicle.getLicense(),
+                space.getParkingLot().getParkingLotName(),
+                space.getParkingSpaceId(),
+                space.getFloor());
     }
 
 
@@ -65,6 +74,9 @@ public class ParkingServiceImpl implements ParkingService {
         //儲存
         vehicleRepository.save(vehicle);
         parkingSpaceRepository.save(parkingSpace);
+        log.info("🚗 車輛 {} 已離場，停車費用為 {}，離開車位 {}",
+                vehicle.getLicense(), parkingSpace.getSpaceIncome(), parkingSpace.getParkingSpaceId());
+
     }
 
     //計算費用
@@ -82,5 +94,42 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
 
+    public  ParkingSpace  assignSpace(Vehicle vehicle){
+        //選擇聽車廠停入
+        List<ParkingLot> parkingLotList = parkingLotRepository.findAll();
+        ParkingLot parkingLot = randomParkingLot(parkingLotList);
+        vehicle.setParkingLot(parkingLot);
+        //排查停車場是否有空位
+        List<ParkingSpace> spaces = parkingLot.getParkingSpaceList();
+        List<ParkingSpace> availableSpaces = spaces
+                .stream().filter(space -> !space.isOccupied())
+                .toList();
+        if (availableSpaces.isEmpty()) {
+            log.warn("⚠️ 偵測到停車場 {} 已滿, id為{}，跳過此車輛", parkingLot.getParkingLotName(), parkingLot.getParkingLotId());
+            return null; //-->沒有車位，直接跳下一輪
+        }
 
+        Random random = new Random();
+        ParkingSpace parkingSpace = availableSpaces.get(random.nextInt( availableSpaces.size()));
+        //ParkingSpace parkingSpace = new ParkingSpace();
+        vehicle.assignParkingSpace(parkingSpace);
+
+        log.info("車輛 {} 被分配至停車場 {} 的車位 {} (type: {}) ",
+                vehicle.getLicense(),
+                parkingLot.getParkingLotName(),
+                parkingSpace.getParkingSpaceId(),
+                parkingSpace.getParkingSpaceType());
+                //vehicle.getExpectedVehicleLeaveTime());
+
+        return parkingSpace;
+    }
+
+
+    //隨機抽取停車場(考慮抽出擴展
+    private ParkingLot randomParkingLot(List<ParkingLot> parkingLots) {
+        Random random = new Random();
+        if (parkingLots == null) throw new APIException("停車場未創建");
+        int index = random.nextInt(parkingLots.size());
+        return parkingLots.get(index);
+    }
 }

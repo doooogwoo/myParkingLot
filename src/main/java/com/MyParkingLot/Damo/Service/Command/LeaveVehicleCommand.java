@@ -32,4 +32,8 @@ public class LeaveVehicleCommand implements VehicleCommand{
     public String getDescription() {
         return "出場指令 - 車牌：" + vehicle.getLicense();
     }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
 }

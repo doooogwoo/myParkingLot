@@ -8,6 +8,7 @@ import com.MyParkingLot.Damo.domain.Model.ParkingSpace;
 import com.MyParkingLot.Damo.Payload.dto.ParkingSpaceDto;
 import com.MyParkingLot.Damo.Payload.dto.VehicleDto;
 import com.MyParkingLot.Damo.Repository.ParkingLotRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     private final ParkingLotRepository parkingLotRepository;
     private final ParkingSpaceViewMapper mapper;

@@ -35,12 +35,12 @@ public class VehicleFactory {
         vehicle.setVehicleEnterTime(enter);
         //再記錄離場時間
         vehicle.setParkingDuration(leavingTime(enter));
-        vehicle.setExpectedVehicleLeaveTime(enter .plus( vehicle.getParkingDuration()));
+        //vehicle.setExpectedVehicleLeaveTime(enter .plus( vehicle.getParkingDuration()));
 
-        log.debug("新車輛 {} 預計停車 {} 分鐘，預估離場時間為 {}",
+        log.debug("新車輛 {} 預計停車 {} 分鐘", //，預估離場時間為 {}
                 vehicle.getLicense(),
-                vehicle.getParkingDuration().toMinutes(),
-                vehicle.getExpectedVehicleLeaveTime());
+                vehicle.getParkingDuration().toMinutes());
+                //vehicle.getExpectedVehicleLeaveTime());
 
         return vehicle;
     }

@@ -1,9 +1,11 @@
 package com.MyParkingLot.Damo.Service.Command;
 
+import com.MyParkingLot.Damo.Repository.VehicleRepository;
 import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import com.MyParkingLot.Damo.Service.websocket.WebSocketService;
 import com.MyParkingLot.Damo.Service.orchestrator.parkingService.ParkingService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public class EnterVehicleCommand implements VehicleCommand{
@@ -14,15 +16,17 @@ public class EnterVehicleCommand implements VehicleCommand{
     private final Vehicle vehicle;
     private final ParkingService parkingService;
     private final WebSocketService webSocketService;
-    public EnterVehicleCommand(Vehicle vehicle,
-                               ParkingService parkingService,
-                               WebSocketService webSocketService) {
+    private final VehicleRepository vehicleRepository;
+    public EnterVehicleCommand(Vehicle vehicle, ParkingService parkingService, WebSocketService webSocketService, VehicleRepository vehicleRepository) {
         this.vehicle = vehicle;
         this.parkingService = parkingService;
         this.webSocketService = webSocketService;
+        this.vehicleRepository = vehicleRepository;
     }
+
     @Override
     public void execute() {
+        vehicleRepository.save(vehicle);
         parkingService.vehicleEntering(vehicle);
         Long lotId = vehicle.getParkingLot().getParkingLotId();
         webSocketService.sendParkingLotSpaceUpdate(lotId);

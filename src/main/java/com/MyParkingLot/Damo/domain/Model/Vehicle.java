@@ -31,7 +31,7 @@ public class Vehicle {
 
     private LocalDateTime vehicleEnterTime; //-->入場
     private Duration parkingDuration;//停多久
-    private LocalDateTime expectedVehicleLeaveTime;//預計出場時間
+    //private LocalDateTime expectedVehicleLeaveTime;//預計出場時間
     private LocalDateTime actualLeaveTime;//實際離場時間
 
     private int fee; // 實際收費，單位：元（由系統記錄收費後金額）

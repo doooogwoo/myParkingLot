@@ -18,18 +18,23 @@ public class SpaceFactory {
         this.parkingSpaceRepository = parkingSpaceRepository;
     }
 
-    public List<ParkingSpace> generateSpaces(ParkingLot parkingLot, int count){
+    public List<ParkingSpace> generateSpaces(ParkingLot parkingLot, int floors, int spacePerFloor) {
         List<ParkingSpace> spaces = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            ParkingSpace parkingSpace = new ParkingSpace();
-            parkingSpace.setOccupied(false);
-            parkingSpace.setParkingLot(parkingLot);
-            parkingSpace.setParkingSpaceType(ParkingSpaceType.BaseParkingSpace);
-            parkingSpace.setSpaceIncome(0);
 
-            spaces.add(parkingSpace);
+        for (int floor = 1; floor <= floors; floor++) {
+            for (int i = 0; i < spacePerFloor; i++) {
+                ParkingSpace parkingSpace = new ParkingSpace();
+                parkingSpace.setOccupied(false);
+                parkingSpace.setParkingLot(parkingLot);
+                parkingSpace.setParkingSpaceType(ParkingSpaceType.BaseParkingSpace);
+                parkingSpace.setSpaceIncome(0);
+                parkingSpace.setFloor(floor); // 👈 樓層設定
+                spaces.add(parkingSpace);
+            }
         }
+
         parkingSpaceRepository.saveAll(spaces);
         return spaces;
     }
+
 }

@@ -1,5 +1,6 @@
 package com.MyParkingLot.Damo.Controller;
 
+import com.MyParkingLot.Damo.Repository.VehicleRepository;
 import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import com.MyParkingLot.Damo.Service.Command.EnterVehicleCommand;
 import com.MyParkingLot.Damo.Service.Command.VehicleCommand;
@@ -22,11 +23,12 @@ public class CommandController {
     private final VehicleFactory vehicleFactory;
     private final ParkingService parkingService;
     private final WebSocketService webSocketService;
+    private final VehicleRepository vehicleRepository;
 
     @PostMapping("/enter")
     public ResponseEntity<String> enterVehicleCommand() {
         Vehicle vehicle = vehicleFactory.generateVehicle();
-        VehicleCommand vehicleCommand = new EnterVehicleCommand(vehicle, parkingService,webSocketService);
+        VehicleCommand vehicleCommand = new EnterVehicleCommand(vehicle, parkingService,webSocketService,vehicleRepository);
         commandManager.addCommand(vehicleCommand);
         return new ResponseEntity<String>("已加入進場指令", HttpStatus.OK);
     }

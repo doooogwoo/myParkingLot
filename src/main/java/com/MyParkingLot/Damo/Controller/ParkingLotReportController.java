@@ -1,12 +1,11 @@
 package com.MyParkingLot.Damo.Controller;
 
 import com.MyParkingLot.Damo.Payload.dto.ReportDto;
-import com.MyParkingLot.Damo.Service.orchestrator.parkingService.report.ReportService;
+import com.MyParkingLot.Damo.Service.orchestrator.report.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 ///api/report → 查詢所有報表

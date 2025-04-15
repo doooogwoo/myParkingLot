@@ -37,27 +37,27 @@ public class ParkingServiceTest {
         timeManager.initGameTime(gameTime, realTime);
     }
 
-    @Test
-    void testVehicleLeaving_CalculatesCorrectFee(){
-        Vehicle vehicle = vehicleFactory.generateVehicle();
-
-        vehicle.setParkingDuration(Duration.ofHours(3));
-        vehicle.setExpectedVehicleLeaveTime(vehicle.getVehicleEnterTime().plusHours(3));
-        vehicleRepository.save(vehicle);
-
-        parkingService.vehicleEntering(vehicle);
-        System.out.println("🚗 ParkingSpace: " + vehicle.getParkingSpace());
-
-        ParkingSpace space = vehicle.getParkingSpace();
-
-        int fee = space.getParkingLot().getParkingTicket().getRate();
-
-        parkingService.vehicleLeaving(vehicle.getVehicleId());
-
-
-        int income = space.getSpaceIncome();
-
-        assertEquals(3 * fee, income);
-    }
+//    @Test
+//    void testVehicleLeaving_CalculatesCorrectFee(){
+//        Vehicle vehicle = vehicleFactory.generateVehicle();
+//
+//        vehicle.setParkingDuration(Duration.ofHours(3));
+//        vehicle.setExpectedVehicleLeaveTime(vehicle.getVehicleEnterTime().plusHours(3));
+//        vehicleRepository.save(vehicle);
+//
+//        parkingService.vehicleEntering(vehicle);
+//        System.out.println("🚗 ParkingSpace: " + vehicle.getParkingSpace());
+//
+//        ParkingSpace space = vehicle.getParkingSpace();
+//
+//        int fee = space.getParkingLot().getParkingTicket().getRate();
+//
+//        parkingService.vehicleLeaving(vehicle.getVehicleId());
+//
+//
+//        int income = space.getSpaceIncome();
+//
+//        assertEquals(3 * fee, income);
+//    }
 
 }

@@ -30,7 +30,17 @@ public class TimeManager {
         log.info("startNanoTime: {}",startNanoTime);
         long elapsedRealSeconds = (System.nanoTime() - startNanoTime) / 1_000_000_000;
         long elapsedGameSeconds = elapsedRealSeconds * TIME_SCALE;
-        log.info("getCurrentGameTime 測試: {}",elapsedGameSeconds);
+        log.info("getCurrentGameTime 測試: {} (換算: {})",
+                elapsedGameSeconds, formatGameDuration(elapsedGameSeconds));
         return gameStartTime.plusSeconds(elapsedGameSeconds);
     }
+    public String formatGameDuration(long gameSeconds) {
+        long days = gameSeconds / (24 * 3600);
+        long hours = (gameSeconds % (24 * 3600)) / 3600;
+        long minutes = (gameSeconds % 3600) / 60;
+        long seconds = gameSeconds % 60;
+
+        return String.format("%d 天 %d 小時 %d 分鐘 %d 秒", days, hours, minutes, seconds);
+    }
+
 }

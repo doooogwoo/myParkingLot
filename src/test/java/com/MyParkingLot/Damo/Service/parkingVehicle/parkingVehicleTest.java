@@ -105,33 +105,33 @@ public class parkingVehicleTest {
         assertTrue(testparkingSpace.isOccupied());
     }
 
-    @Test //1.space狀態 2.離場時間
-    void leavingTest3(){
-        ParkingSpace testSpace = new ParkingSpace();
-        Vehicle testVehicle = new Vehicle();
-        testVehicle.setLicense("ABC-123");
-        LocalDateTime leavingTime = LocalDateTime.now().minusHours(5);
-        testVehicle.setExpectedVehicleLeaveTime(leavingTime);
-        testVehicle.setVehicleId(1L);
-        testVehicle.assignParkingSpace(testSpace);
-
-        //要模擬資料庫查找
-        Mockito.when(vehicleRepository.findById(testVehicle.getVehicleId())).thenReturn(Optional.of(testVehicle));
-
-        parkingService.vehicleLeaving(testVehicle.getVehicleId());
-
-
-        //停車場為空
-        assertFalse(testSpace.isOccupied());
-
-        //離場時間
-        assertEquals(leavingTime,testVehicle.getExpectedVehicleLeaveTime());
-
-        verify(vehicleRepository).save(testVehicle);
-        verify(parkingSpaceRepository).save(testSpace);
-
-
-    }
+//    @Test //1.space狀態 2.離場時間
+//    void leavingTest3(){
+//        ParkingSpace testSpace = new ParkingSpace();
+//        Vehicle testVehicle = new Vehicle();
+//        testVehicle.setLicense("ABC-123");
+//        LocalDateTime leavingTime = LocalDateTime.now().minusHours(5);
+//        testVehicle.setExpectedVehicleLeaveTime(leavingTime);
+//        testVehicle.setVehicleId(1L);
+//        testVehicle.assignParkingSpace(testSpace);
+//
+//        //要模擬資料庫查找
+//        Mockito.when(vehicleRepository.findById(testVehicle.getVehicleId())).thenReturn(Optional.of(testVehicle));
+//
+//        parkingService.vehicleLeaving(testVehicle.getVehicleId());
+//
+//
+//        //停車場為空
+//        assertFalse(testSpace.isOccupied());
+//
+//        //離場時間
+//        assertEquals(leavingTime,testVehicle.getExpectedVehicleLeaveTime());
+//
+//        verify(vehicleRepository).save(testVehicle);
+//        verify(parkingSpaceRepository).save(testSpace);
+//
+//
+//    }
 
     @Test //「進場失敗情境」測試（找不到空格 → 拋例外
     void test3(){

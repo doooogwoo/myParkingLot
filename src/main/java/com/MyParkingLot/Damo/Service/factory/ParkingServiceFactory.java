@@ -34,74 +34,110 @@ public class ParkingServiceFactory {
     private final TimeManager timeManager;
     private final VehicleCommandManager vehicleCommandManager;
     private final WebSocketService webSocketService;
-    private final ParkingLotRepository parkingLotRepository;
-    private final ParkingSpaceRepository parkingSpaceRepository;
 
-    public  ParkingSpace  assignSpace(Vehicle vehicle){
-        //選擇聽車廠停入
-        List<ParkingLot> parkingLotList = parkingLotRepository.findAll();
-        ParkingLot parkingLot = randomParkingLot(parkingLotList);
-        vehicle.setParkingLot(parkingLot);
-        //排查停車場是否有空位
-        List<ParkingSpace> spaces = parkingLot.getParkingSpaceList();
-        List<ParkingSpace> availableSpaces = spaces
-                .stream().filter(space -> !space.isOccupied())
-                .toList();
-        if (availableSpaces.isEmpty()) throw new APIException("沒有可用的停車位");
-        Random random = new Random();
-        ParkingSpace parkingSpace = availableSpaces.get(random.nextInt( availableSpaces.size()));
-        //ParkingSpace parkingSpace = new ParkingSpace();
-        vehicle.assignParkingSpace(parkingSpace);
+    public void debugVehicleStatus(Vehicle vehicle) {
+        String license = vehicle.getLicense();
+        log.info("[偵錯] 車牌：{}", license);
 
-        log.info("車輛 {} 被分配至停車場 {} 的車位 {} (type: {})",
-                vehicle.getLicense(),
-                parkingLot.getParkingLotName(),
-                parkingSpace.getParkingSpaceId(),
-                parkingSpace.getParkingSpaceType());
+        if (vehicle.getParkingLot() == null) {
+            log.warn("🚨 [偵錯] {} 尚未指派停車場", license);
+        } else {
+            log.info("✅ 已指派停車場：{}", vehicle.getParkingLot().getParkingLotName());
+        }
 
-        return parkingSpace;
+        if (vehicle.getParkingSpace() == null) {
+            log.warn("🚨 [偵錯] {} 尚未指派停車位", license);
+        } else {
+            log.info("✅ 已指派車位：{}", vehicle.getParkingSpace().getParkingSpaceId());
+        }
+
+        if (vehicle.getVehicleEnterTime() == null) {
+            log.warn("🚨 [偵錯] {} 尚未設定進場時間", license);
+        } else {
+            log.info("✅ 進場時間：{}", vehicle.getVehicleEnterTime());
+        }
+
+        if (vehicle.getParkingDuration() == null) {
+            log.warn("🚨 [偵錯] {} 尚未設定停車時間", license);
+        } else {
+            log.info("✅ 預計停車：{} 分鐘", vehicle.getParkingDuration().toMinutes());
+        }
+
+        if (vehicle.getActualLeaveTime() != null) {
+            log.info("🕒 已離場時間：{}", vehicle.getActualLeaveTime());
+        }
     }
-
-
-    //隨機抽取停車場(考慮抽出擴展
-    private ParkingLot randomParkingLot(List<ParkingLot> parkingLots) {
-        Random random = new Random();
-        if (parkingLots == null) throw new APIException("停車場未創建");
-        int index = random.nextInt(parkingLots.size());
-        return parkingLots.get(index);
-    }
-
 
 
     //自動指派
-    public void autoAssignVehicle(){
-        Vehicle vehicle = vehicleFactory.generateVehicle();
-        //parkingService.vehicleEntering(vehicle);
+    public void autoAssignVehicle() {
 
-        vehicleCommandManager.addCommand(new EnterVehicleCommand(vehicle,parkingService,webSocketService));
+        Vehicle vehicle = vehicleFactory.generateVehicle();
+        log.info("偵錯debug 1  {}", vehicle.getLicense());
+        debugVehicleStatus(vehicle);
+        vehicleCommandManager.addCommand
+                (new EnterVehicleCommand(vehicle, parkingService, webSocketService,vehicleRepository));
+
+        log.info("已將車輛 {} 加入進場指令佇列", vehicle.getLicense());
+        log.info("偵錯debug 2  {}", vehicle.getLicense());
+        debugVehicleStatus(vehicle);
     }
 
     //自動離場，從"所有車庫裡判斷"
-    public void autoLeaveVehicles(Long id){
+    public void autoLeaveVehicles() {
         List<Vehicle> vehicles = vehicleRepository.findAll();
         LocalDateTime now = timeManager.getCurrentGameTime();
 
-        for (Vehicle vehicle : vehicles){
-            if (vehicle.getExpectedVehicleLeaveTime() != null &&
+        // 🔍 新增：列出尚未指派車位的車輛
+        List<Vehicle> unassignedVehicles = vehicles.stream()
+                .filter(v -> v.getParkingSpace() == null)
+                .toList();
+
+        if (!unassignedVehicles.isEmpty()) {
+            log.warn("🚧 [偵錯] 以下車輛尚未完成車位指派（共 {} 輛）：", unassignedVehicles.size());
+            unassignedVehicles.forEach(v ->
+                    log.warn("    ➤ 車牌：{}（ID: {}）", v.getLicense(), v.getVehicleId())
+            );
+            vehicleRepository.deleteAll(unassignedVehicles);
+            log.info("🗑️ 已刪除未完成指派的車輛資料！");
+        } else {
+            log.info("✅ 全部車輛皆已完成指派，無需清理。");
+
+        }
+
+
+        for (Vehicle vehicle : vehicles) {
+            if (vehicle.getParkingLot() == null || vehicle.getParkingSpace() == null) {
+                log.warn("尚未完成進場，跳過離場流程：{}", vehicle.getLicense());
+                continue;
+            }
+
+            LocalDateTime expected = vehicle.getVehicleEnterTime().plus(vehicle.getParkingDuration());
+            if (expected != null &&
                     vehicle.getActualLeaveTime() == null) {
 
-                LocalDateTime expected = vehicle.getExpectedVehicleLeaveTime();
-
                 if (now.isAfter(expected)) {
+                    String parkingLotName = vehicle.getParkingLot().getParkingLotName();
+                    Long spaceId = vehicle.getParkingSpace().getParkingSpaceId();
+
+                    log.info("⏰ now={}, 車牌={}, 預估離場時間={}", now, vehicle.getLicense(), expected);
+                    log.info("自動離場成功：車牌 {}，停車場 {}，車位 {}",
+                            vehicle.getLicense(), parkingLotName, spaceId);
+
                     //以命令模式進行離場
-                    vehicleCommandManager.addCommand(new LeaveVehicleCommand(vehicle,parkingService,webSocketService));
-                    log.info("自動離場成功：{}", vehicle.getLicense());
+                    vehicleCommandManager.addCommand(
+                            new LeaveVehicleCommand(vehicle, parkingService, webSocketService));
+                    log.debug("📍 DEBUG 車輛 {} 是否完成指派？Lot={}, Space={}",
+                            vehicle.getLicense(),
+                            vehicle.getParkingLot() != null,
+                            vehicle.getParkingSpace() != null);
+
+
                 }
             }
 
         }
     }
-
 
 
 }

@@ -12,50 +12,43 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor //→ 自動幫我生成一個「只包含 final 欄位」的建構子
+@RequiredArgsConstructor
 public class ParkingLotFactory {
     private final ParkingLotRepository parkingLotRepository;
     private final SpaceFactory spaceFactory;
     private final ParkingTicketFactory parkingTicketFactory;
     private final ParkingTicketRepository parkingTicketRepository;
-    public void initParkingLot(String parkingLotname){
-        ParkingLot parkingLot = new ParkingLot();
-        parkingLot.setCapacity(50);
-        parkingLot.setFloors(1);
-        parkingLot.setExpenses(10000);
-        parkingLot.setParkingLotName(parkingLotname);
-        parkingLot.setCreateAt(LocalDateTime.now());
+    private ParkingLot buildParkingLot(String name, int floors, int spacePerFloor) {
+        ParkingLot lot = new ParkingLot();
+        lot.setParkingLotName(name);
+        lot.setFloors(floors);
+        lot.setExpenses(10000); // 可後續改為參數
+        lot.setCreateAt(LocalDateTime.now());
 
-        parkingLotRepository.save(parkingLot);
+        parkingLotRepository.save(lot); // 先存，讓 spaces 有 foreign key
 
-        parkingTicketFactory.generateTicket(parkingLot);
-        List<ParkingSpace> buildSpace = spaceFactory.generateSpaces(parkingLot,parkingLot.getCapacity());
-        parkingLot.setParkingSpaceList(buildSpace);
+        List<ParkingSpace> spaces = spaceFactory.generateSpaces(lot, floors, spacePerFloor);
+        lot.setParkingSpaceList(spaces);
+        lot.setCapacity(spaces.size()); // 自動同步
 
-        parkingLotRepository.save(parkingLot);
+        return lot;
     }
 
-    public void createParkingLot(String parkingLotName,int ticketPrice){
-        ParkingLot parkingLot = new ParkingLot();
-        parkingLot.setCapacity(50);
-        parkingLot.setFloors(1);
-        parkingLot.setExpenses(10000);
-        parkingLot.setParkingLotName(parkingLotName);
-        parkingLot.setCreateAt(LocalDateTime.now());
+    public void initParkingLot(String parkingLotName) {
+        ParkingLot lot = buildParkingLot(parkingLotName, 1, 50);
+        parkingTicketFactory.generateTicket(lot);
+        parkingLotRepository.save(lot);
+    }
 
-        parkingLotRepository.save(parkingLot);
+    public void createParkingLot(String parkingLotName, int ticketPrice) {
+        ParkingLot lot = buildParkingLot(parkingLotName, 1, 50);
+
         ParkingTicket ticket = new ParkingTicket();
-        ticket.setParkingLot(parkingLot);
+        ticket.setParkingLot(lot);
         ticket.setRate(ticketPrice);
         parkingTicketRepository.save(ticket);
 
-        parkingLot.setParkingTicket(ticket);
-
-        List<ParkingSpace> buildSpace = spaceFactory.generateSpaces(parkingLot,parkingLot.getCapacity());
-        parkingLot.setParkingSpaceList(buildSpace);
-
-        parkingLotRepository.save(parkingLot);
+        lot.setParkingTicket(ticket);
+        parkingLotRepository.save(lot);
     }
-
-    
 }

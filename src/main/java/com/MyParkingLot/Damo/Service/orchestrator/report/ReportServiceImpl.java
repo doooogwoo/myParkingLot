@@ -1,4 +1,4 @@
-package com.MyParkingLot.Damo.Service.orchestrator.parkingService.report;
+package com.MyParkingLot.Damo.Service.orchestrator.report;
 
 import com.MyParkingLot.Damo.domain.Model.WeeklyReport;
 import com.MyParkingLot.Damo.Payload.dto.ReportDto;

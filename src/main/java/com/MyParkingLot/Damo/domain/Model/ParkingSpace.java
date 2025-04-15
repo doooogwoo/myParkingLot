@@ -4,11 +4,13 @@ import com.MyParkingLot.Damo.Exception.BusinessException;
 import com.MyParkingLot.Damo.Exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Slf4j
 public class ParkingSpace {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -22,6 +24,8 @@ public class ParkingSpace {
     private boolean isOccupied;
 
     private int spaceIncome;
+    private int floor;
+
 
     @OneToOne
     @JoinColumn(name = "vehicle_id")
@@ -34,6 +38,12 @@ public class ParkingSpace {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private ParkingLot parkingLot;
+
+    @Override
+    public String toString() {
+        return "Space[" + parkingSpaceId + ", " + parkingSpaceType + ", floor=" + floor + ", occupied=" + isOccupied + "]";
+    }
+
 
     public void assignVehicle(Vehicle vehicle) {
         if (this.isOccupied()) {
@@ -51,6 +61,11 @@ public class ParkingSpace {
         this.setOccupied(true);
         this.setVehicle(vehicle);
         vehicle.setParkingSpace(this);
+        log.info("🚗 車輛 {} 進入車位 {} (樓層 {}, 類型 {})", vehicle.getLicense(), this.parkingSpaceId, this.floor, this.parkingSpaceType);
+        if (this.getParkingLot() != null) {
+            vehicle.setParkingLot(this.getParkingLot());
+        }
+
     }
 
     public void unassignVehicle(){
@@ -58,9 +73,11 @@ public class ParkingSpace {
             throw new BusinessException(ErrorCode.VEHICLE_LEAVE_SPACE_IS_EMPTY);
         }
 
+        Vehicle v = this.vehicle;
         this.setOccupied(false);
         this.vehicle.setParkingSpace(null);
         this.setVehicle(null);
+        log.info("🚗 車輛 {} 離開車位 {} (樓層 {})", v.getLicense(), this.parkingSpaceId, this.floor);
     }
 
 }
