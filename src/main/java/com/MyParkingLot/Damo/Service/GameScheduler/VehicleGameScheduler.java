@@ -9,18 +9,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GameScheduler {
+public class VehicleGameScheduler {
 
     private final ParkingServiceFactory parkingServiceFactory;
     private final VehicleCommandManager vehicleCommandManager;
 
-    // 預備加入時間模擬功能
-//    public void tick() {
-//        parkingServiceFactory.autoAssignVehicle();
-//        parkingServiceFactory.autoLeaveVehicles();
-//
-//        vehicleCommandManager.runAll();
-//    }
+
     public void tick() {
         log.info("🎯 進場佇列 / 離場佇列 狀態");
 

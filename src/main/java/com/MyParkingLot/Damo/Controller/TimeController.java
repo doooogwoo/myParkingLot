@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("time")
+@RequestMapping("/api/time")
 public class TimeController {
     @Autowired
     private TimeService timeService;

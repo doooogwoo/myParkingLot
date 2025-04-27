@@ -1,6 +1,7 @@
 package com.MyParkingLot.Damo.Service.Command;
 
 import com.MyParkingLot.Damo.Repository.VehicleRepository;
+import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
 import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import com.MyParkingLot.Damo.Service.websocket.WebSocketService;
 import com.MyParkingLot.Damo.Service.orchestrator.parkingService.ParkingService;
@@ -17,7 +18,8 @@ public class EnterVehicleCommand implements VehicleCommand{
     private final ParkingService parkingService;
     private final WebSocketService webSocketService;
     private final VehicleRepository vehicleRepository;
-    public EnterVehicleCommand(Vehicle vehicle, ParkingService parkingService, WebSocketService webSocketService, VehicleRepository vehicleRepository) {
+    public EnterVehicleCommand(Vehicle vehicle, ParkingService parkingService, WebSocketService webSocketService,
+                               VehicleRepository vehicleRepository) {
         this.vehicle = vehicle;
         this.parkingService = parkingService;
         this.webSocketService = webSocketService;
@@ -30,7 +32,6 @@ public class EnterVehicleCommand implements VehicleCommand{
         parkingService.vehicleEntering(vehicle);
         Long lotId = vehicle.getParkingLot().getParkingLotId();
         webSocketService.sendParkingLotSpaceUpdate(lotId);
-
     }
 
     @Override

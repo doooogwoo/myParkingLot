@@ -1,5 +1,8 @@
 package com.MyParkingLot.Damo.domain.Model;
 
+import com.MyParkingLot.Damo.Exception.APIException;
+import com.MyParkingLot.Damo.Service.observer.ParkingObserver;
+import com.MyParkingLot.Damo.Service.observer.VehicleEvent;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-public class ParkingLot {
+public class ParkingLot implements ParkingObserver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long parkingLotId;
@@ -21,7 +24,7 @@ public class ParkingLot {
     private LocalDateTime createAt;
 
     private int capacity;
-    private int income; //收入
+    private int income = 0; //收入
     private int expenses; //維修費用
     private int floors;
 
@@ -52,4 +55,15 @@ public class ParkingLot {
     @EqualsAndHashCode.Exclude
     private List<WeeklyReport> weeklyReports = new ArrayList<>();
 
+    public void addIncome(int amount){
+        if (amount <0){
+            throw new APIException("停車費不能為負!!");
+        }
+        this.income += amount;
+    }
+
+    @Override
+    public void update(VehicleEvent event) {
+        addIncome(event.getIncome());
+    }
 }

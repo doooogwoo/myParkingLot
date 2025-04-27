@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*") // ✅ 正確做法（支援 allowCredentials）
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 

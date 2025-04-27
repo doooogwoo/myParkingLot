@@ -1,5 +1,6 @@
 package com.MyParkingLot.Damo.Service.Command;
 
+import com.MyParkingLot.Damo.Repository.VehicleRepository;
 import com.MyParkingLot.Damo.domain.Model.ParkingLot;
 import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import com.MyParkingLot.Damo.Service.websocket.WebSocketService;
@@ -16,6 +17,7 @@ public class VehicleCommandManagerTest {
     private ParkingService parkingService;
     private VehicleCommandManager commandManager;
     private WebSocketService webSocketService;
+    private VehicleRepository vehicleRepository;
 
     //原本 Spring 會幫我們注入（像是 @Autowired），但這裡沒用 Spring，所以要自己 new 跟 mock
     @BeforeEach//測試前準備用的東西
@@ -24,6 +26,7 @@ public class VehicleCommandManagerTest {
         //假裝有這個服務（不啟動整個系統，只測你要測的類別）
 
         webSocketService = mock(WebSocketService.class);
+        vehicleRepository = mock(VehicleRepository.class);
 
         commandManager = new VehicleCommandManager();
     }
@@ -43,8 +46,8 @@ public class VehicleCommandManagerTest {
         v2.setParkingLot(lot);
 
         //開始模擬
-        VehicleCommand cmd1 = new EnterVehicleCommand(v1,parkingService,webSocketService);
-        VehicleCommand cmd2 = new EnterVehicleCommand(v2,parkingService,webSocketService);
+        VehicleCommand cmd1 = new EnterVehicleCommand(v1,parkingService,webSocketService,vehicleRepository);
+        VehicleCommand cmd2 = new EnterVehicleCommand(v2,parkingService,webSocketService,vehicleRepository);
         VehicleCommand cmd3 = new LeaveVehicleCommand(v1,parkingService,webSocketService);
 
         //加入manager管理
@@ -85,7 +88,7 @@ public class VehicleCommandManagerTest {
         lot.setParkingLotId(5L);
         v1.setParkingLot(lot);
 
-        VehicleCommand cmd1 = new EnterVehicleCommand(v1, parkingService, webSocketService);
+        VehicleCommand cmd1 = new EnterVehicleCommand(v1, parkingService, webSocketService,vehicleRepository);
         commandManager.addCommand(cmd1);
 
         commandManager.runOne();

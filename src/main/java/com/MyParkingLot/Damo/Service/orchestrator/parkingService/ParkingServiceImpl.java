@@ -9,8 +9,9 @@ import com.MyParkingLot.Damo.Repository.ParkingSpaceRepository;
 import com.MyParkingLot.Damo.Repository.VehicleRepository;
 import com.MyParkingLot.Damo.Service.FeeStrategy.FeeStrategy;
 import com.MyParkingLot.Damo.Service.FeeStrategy.FeeStrategyFactory;
-import com.MyParkingLot.Damo.Service.factory.ParkingServiceFactory;
 import com.MyParkingLot.Damo.Service.logic.ParkingTicketServiceImpl;
+import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
+import com.MyParkingLot.Damo.Service.observer.VehicleEvent;
 import com.MyParkingLot.Damo.Service.time.TimeManager;
 import com.MyParkingLot.Damo.domain.Model.*;
 import jakarta.transaction.Transactional;
@@ -31,6 +32,7 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingTicketServiceImpl parkingTicketService;
     private final ParkingLotRepository parkingLotRepository;
     private final FeeStrategyFactory feeStrategyFactory;
+    private final ParkingLotIncome parkingLotIncome;
 
     @Transactional
     @Override //（指派 → 設定 → 驗證 → 儲存）
@@ -76,7 +78,14 @@ public class ParkingServiceImpl implements ParkingService {
         parkingSpaceRepository.save(parkingSpace);
         log.info("🚗 車輛 {} 已離場，停車費用為 {}，離開車位 {}",
                 vehicle.getLicense(), parkingSpace.getSpaceIncome(), parkingSpace.getParkingSpaceId());
-
+        //離場流程結束後產生停車事件，通知
+        VehicleEvent event = new VehicleEvent(vehicle,parkingSpace.getSpaceIncome());
+        //parkingLotIncome（Subject）--->通知所有已經註冊的觀察者（Observer)(像是parkingLot)
+        //「嘿，有一個新的事件發生了！請你們各自看看要不要處理！」
+        parkingLotIncome.notifyObservers(event);
+        ParkingLot lot = parkingSpace.getParkingLot();
+        parkingLotRepository.save(lot);
+        log.info("停車場目前收入 {}",lot.getIncome());
     }
 
     //計算費用

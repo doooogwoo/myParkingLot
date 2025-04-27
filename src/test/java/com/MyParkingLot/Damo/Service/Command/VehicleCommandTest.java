@@ -1,5 +1,6 @@
 package com.MyParkingLot.Damo.Service.Command;
 
+import com.MyParkingLot.Damo.Repository.VehicleRepository;
 import com.MyParkingLot.Damo.domain.Model.ParkingLot;
 import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import com.MyParkingLot.Damo.Service.websocket.WebSocketService;
@@ -16,6 +17,7 @@ public class VehicleCommandTest {
     private ParkingLot mockLot;
     private ParkingService parkingService;
     private WebSocketService webSocketService;
+    private VehicleRepository vehicleRepository;
 
     @BeforeEach
     void setUp(){
@@ -46,7 +48,7 @@ public class VehicleCommandTest {
 
     @Test
     void testExecute_shouldCallEnterAndSendWebSocket(){
-        EnterVehicleCommand command = new EnterVehicleCommand(mockVehicle,parkingService,webSocketService);
+        EnterVehicleCommand command = new EnterVehicleCommand(mockVehicle,parkingService,webSocketService,vehicleRepository);
 
         command.execute();
 

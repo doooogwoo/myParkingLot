@@ -22,6 +22,7 @@ public class ReportServiceImpl implements ReportService {
     //產生報表
     public ReportDto buildReport(Long parkingLotId, LocalDateTime gameNow){
         WeeklyReport weeklyReport = reportFactory.generateWeeklyReport(parkingLotId, gameNow);
+        weeklyReportRepository.save(weeklyReport);
         return mapper.map(weeklyReport,ReportDto.class);
     }
     @Override
