@@ -13,6 +13,7 @@ public class VehicleGameScheduler {
 
     private final ParkingServiceFactory parkingServiceFactory;
     private final VehicleCommandManager vehicleCommandManager;
+    private boolean isRunning=false;
 
 
     public void tick() {
@@ -30,9 +31,17 @@ public class VehicleGameScheduler {
         vehicleCommandManager.runAll();
     }
 
+    public void setRunning(boolean running) {
+        this.isRunning = running;
+        log.info("模擬車流目前狀態：{}", running ? "啟動" : "暫停");
+    }
 
     @Scheduled(fixedRate = 5000)
     public void scheduledTick() {
+        if (!isRunning){
+            log.info("VehicleGameScheduler.tick尚未啟動");
+            return;
+        }
         tick();
     }
 }

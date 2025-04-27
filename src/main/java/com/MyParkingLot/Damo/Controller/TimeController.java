@@ -1,6 +1,8 @@
 package com.MyParkingLot.Damo.Controller;
 
 import com.MyParkingLot.Damo.Payload.dto.TimeDto;
+import com.MyParkingLot.Damo.Service.GameScheduler.VehicleGameScheduler;
+import com.MyParkingLot.Damo.Service.logic.ResetService;
 import com.MyParkingLot.Damo.Service.time.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class TimeController {
     @Autowired
     private TimeService timeService;
+    private VehicleGameScheduler vehicleGameScheduler;
+    private ResetService resetService;
     @GetMapping("/getCurrentTime") //--->查詢當前時間
     public ResponseEntity<String> getCurrentTime(){
         String timeDtoNow = timeService.getFormattedCurrentGameTime();
@@ -24,15 +28,25 @@ public class TimeController {
         return new ResponseEntity<TimeDto>(time,HttpStatus.OK);
     }
 
-    @PostMapping("startGame") //開始遊戲
+
+    @PostMapping("/startGame") //---->開始遊戲
     public ResponseEntity<TimeDto> startGame(){
         TimeDto startTimeDto = timeService.startGame();
-        return new ResponseEntity<TimeDto>(startTimeDto,HttpStatus.OK);
+        vehicleGameScheduler.setRunning(true);
+        return new ResponseEntity<>(startTimeDto,HttpStatus.OK);
     }
 
-    @PostMapping("resetGame")
+    @PostMapping("/saveAndExit") //-->存檔並結束遊戲
+    public ResponseEntity<TimeDto> saveAndExit(@RequestBody TimeDto timeDto){
+        TimeDto time = timeService.saveGameTime(timeDto);
+        vehicleGameScheduler.setRunning(false);
+        return new ResponseEntity<TimeDto>(time,HttpStatus.OK);
+    }
+
+    @PostMapping("/resetGame")//重設遊戲
     public ResponseEntity<TimeDto> resetGame(){
         TimeDto resetTimeDto = timeService.resetGame();
+        resetService.resetGameData();
         return new ResponseEntity<>(resetTimeDto,HttpStatus.OK);
     }
 }
