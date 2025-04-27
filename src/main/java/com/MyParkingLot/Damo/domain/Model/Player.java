@@ -24,12 +24,6 @@ public class Player {
 }
 
 /*
-*Player（玩家）
-
-balance（金錢）
-
-ownedParkingLots（擁有的停車場）
-
 upgrades（擴充裝備）
 *
 * */

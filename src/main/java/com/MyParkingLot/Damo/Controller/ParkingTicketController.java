@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/parkingTicket")
+@RequestMapping("/api/parkingTicket")
 public class ParkingTicketController {
     private final ParkingTicketService ticketService;
     @Autowired
@@ -17,7 +17,7 @@ public class ParkingTicketController {
         this.ticketService = ticketService;
     }
 
-    @PatchMapping("{ticketId}/updateTicket")
+    @PatchMapping("/{ticketId}/updateTicket")
     public ResponseEntity<String> updateFee(@PathVariable Long ticketId,
                                             @Valid @RequestBody ParkingTicketDto parkingTicketDto){
         ParkingTicketDto ticketDto = ticketService.updateFee(ticketId,parkingTicketDto.getFee());
