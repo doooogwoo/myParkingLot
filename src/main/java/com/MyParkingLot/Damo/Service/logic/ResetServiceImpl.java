@@ -1,11 +1,15 @@
 package com.MyParkingLot.Damo.Service.logic;
 
-import com.MyParkingLot.Damo.Repository.ParkingLotRepository;
-import com.MyParkingLot.Damo.Repository.ParkingTicketRepository;
-import com.MyParkingLot.Damo.Repository.VehicleRepository;
+import com.MyParkingLot.Damo.Repository.*;
 import com.MyParkingLot.Damo.Service.factory.ParkingLotFactory;
+import com.MyParkingLot.Damo.domain.Model.ParkingLot;
+import com.MyParkingLot.Damo.domain.Model.ParkingSpace;
+import com.MyParkingLot.Damo.domain.Model.Player;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -14,12 +18,30 @@ public class ResetServiceImpl implements ResetService{
     private final ParkingTicketRepository parkingTicketRepository;
     private final VehicleRepository vehicleRepository;
     private final ParkingLotFactory parkingLotFactory;
+    private final ParkingSpaceRepository parkingSpaceRepository;
+    private final WeeklyReportRepository weeklyReportRepository;
+    private final PlayerRepository playerRepository;
     @Override
+    @Transactional
     public void resetGameData(){
-        parkingLotRepository.deleteAll();
-        parkingTicketRepository.deleteAll();
-        vehicleRepository.deleteAll();
 
-        parkingLotFactory.initParkingLot("Origin Lot");
+        //先清除連結
+        List<ParkingSpace> spaces = parkingSpaceRepository.findAll();
+        for(ParkingSpace space : spaces){
+            space.setVehicle(null);
+            space.setParkingLot(null);
+        }
+        parkingSpaceRepository.saveAll(spaces);
+        parkingSpaceRepository.flush();
+
+        weeklyReportRepository.deleteAllInBatch();
+
+        parkingTicketRepository.deleteAllInBatch();
+        vehicleRepository.deleteAllInBatch();
+        parkingSpaceRepository.deleteAllInBatch();
+        parkingLotRepository.deleteAllInBatch();
+        playerRepository.deleteAll();
+
+        //parkingLotFactory.initParkingLot("Origin Lot");交給init player
     }
 }

@@ -4,23 +4,22 @@ import com.MyParkingLot.Damo.Exception.ResourceNotFoundException;
 import com.MyParkingLot.Damo.domain.Model.ParkingLot;
 import com.MyParkingLot.Damo.domain.Model.ParkingTicket;
 import com.MyParkingLot.Damo.Repository.ParkingTicketRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ParkingTicketFactory {
     private final ParkingTicketRepository parkingTicketRepository;
-    @Autowired
-    public ParkingTicketFactory(ParkingTicketRepository parkingTicketRepository) {
-        this.parkingTicketRepository = parkingTicketRepository;
-    }
 
-
-    public void generateTicket(ParkingLot parkingLot){
+    public ParkingTicket generateTicket(ParkingLot parkingLot){
         ParkingTicket parkingTicket = new ParkingTicket();
         parkingTicket.setRate(30);
         parkingTicket.assignParkingLot(parkingLot);
         parkingTicketRepository.save(parkingTicket);
+        System.out.println("🪄ticket已存入db");
+        return parkingTicket;
     }
 
     public void setFee(Long parkingTicketId,int fee){

@@ -16,7 +16,7 @@ public class ParkingLotController {
         this.parkingLotService = parkingLotService;
     }
 
-    @PostMapping("/init-parkingLot")//❌已淘汰
+    @PostMapping("/init-parkingLot")//❌已淘汰-->合併到player init
     public ResponseEntity<String> initParkingLot(@RequestParam String parkingLotName){
         parkingLotService.initParkingLot(parkingLotName);
         return new ResponseEntity<String> (parkingLotName,HttpStatus.CREATED);

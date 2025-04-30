@@ -7,6 +7,7 @@ import com.MyParkingLot.Damo.domain.Model.ParkingTicket;
 import com.MyParkingLot.Damo.Repository.ParkingLotRepository;
 import com.MyParkingLot.Damo.Repository.ParkingTicketRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ParkingLotFactory {
     private final ParkingLotRepository parkingLotRepository;
     private final SpaceFactory spaceFactory;
@@ -38,13 +40,21 @@ public class ParkingLotFactory {
         return lot;
     }
 
-    public void initParkingLot(String parkingLotName) {
+    public ParkingLot initParkingLot(String parkingLotName) {
         ParkingLot lot = buildParkingLot(parkingLotName, 1, 50);
-        parkingTicketFactory.generateTicket(lot);
+        log.info("🪄lot 建立完成: {}", lot);
         parkingLotRepository.save(lot);
+        log.info("🪄lot 存入DB，ID={}", lot.getParkingLotId());
+        ParkingTicket ticket = parkingTicketFactory.generateTicket(lot);
+        log.info("🪄ticket 建立並存入DB，綁定ParkingLot ID={}", ticket.getParkingLot().getParkingLotId());
+
+        lot.setParkingTicket(ticket);
+        parkingLotRepository.save(lot);
+        log.info("🪄lot更新完ticket後再次存入DB");
+        return lot;
     }
 
-    public void createParkingLot(String parkingLotName, int ticketPrice) {
+    public ParkingLot createParkingLot(String parkingLotName, int ticketPrice) {
         ParkingLot lot = buildParkingLot(parkingLotName, 1, 50);
 
         ParkingTicket ticket = new ParkingTicket();
@@ -54,5 +64,7 @@ public class ParkingLotFactory {
 
         lot.setParkingTicket(ticket);
         parkingLotRepository.save(lot);
+
+        return lot;
     }
 }

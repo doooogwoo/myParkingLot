@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayerDto {
-    private int pakingLotTotal;
+    private String playerName;
+    private int parkingLotTotal;
     private int balance;
 }

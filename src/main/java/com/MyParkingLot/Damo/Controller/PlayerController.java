@@ -5,9 +5,7 @@ import com.MyParkingLot.Damo.Service.logic.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/player")
@@ -18,5 +16,12 @@ public class PlayerController {
     public ResponseEntity<PlayerDto> playerInfo(){
         PlayerDto playerDto = playerService.getPlayerInfo();
         return new  ResponseEntity<>(playerDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/initPlayer")
+    public ResponseEntity<String> initPlayer(@RequestParam String playerName){
+        playerService.initPlayer(playerName);
+        String massage = "Player" + playerName +" init success!";
+        return new  ResponseEntity<>(massage, HttpStatus.CREATED);
     }
 }

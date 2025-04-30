@@ -13,40 +13,40 @@ import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class TimeRecord {
     @Id
     private int timeId = 1; //--->只會有一個時間紀錄
 
-    @Getter
-    @Column(nullable = false,name = "record_history", columnDefinition = "TIMESTAMP")
-    private LocalDateTime lastGameTime;
 
-    @Getter
+    @Column(nullable = false,name = "record_history", columnDefinition = "DATETIME")
+    private LocalDateTime recordHistory;
+
     @Column(nullable = false)
     private long lastRealTimestamp;  // 現實時間戳記
 
-    public TimeRecord() {
-    }
+//    public TimeRecord() {
+//    }
 
-    public TimeRecord(LocalDateTime lastGameTime, long lastRealTimestamp) {
-        this.lastGameTime = lastGameTime;
+    public TimeRecord(LocalDateTime recordHistory, long lastRealTimestamp) {
+        this.recordHistory = recordHistory;
         this.lastRealTimestamp = lastRealTimestamp;
     }
 
-    public LocalDateTime getLastGameTime() {
-        return lastGameTime;
-    }
-
-    public void setLastGameTime(LocalDateTime lastGameTime) {
-        this.lastGameTime = lastGameTime;
-    }
-
-    public long getLastRealTimestamp() {
-        return lastRealTimestamp;
-    }
-
-    public void setLastRealTimestamp(long lastRealTimestamp) {
-        this.lastRealTimestamp = lastRealTimestamp;
-    }
+//    public LocalDateTime getLastGameTime() {
+//        return lastGameTime;
+//    }
+//
+//    public void setLastGameTime(LocalDateTime lastGameTime) {
+//        this.lastGameTime = lastGameTime;
+//    }
+//
+//    public long getLastRealTimestamp() {
+//        return lastRealTimestamp;
+//    }
+//
+//    public void setLastRealTimestamp(long lastRealTimestamp) {
+//        this.lastRealTimestamp = lastRealTimestamp;
+//    }
 }

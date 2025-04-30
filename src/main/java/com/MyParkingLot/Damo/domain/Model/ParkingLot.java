@@ -34,23 +34,23 @@ public class ParkingLot implements ParkingObserver {
     private boolean isElectricFull;
     private double handicapBonus;
 
-    @OneToMany(mappedBy = "parkingLot")
+    @OneToMany(mappedBy = "parkingLot",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "parkingLot")
+    @OneToOne(mappedBy = "parkingLot",cascade = CascadeType.ALL,orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private ParkingTicket parkingTicket;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Player player;
 
-    @OneToMany(mappedBy = "parkingLot")
+    @OneToMany(mappedBy = "parkingLot",cascade = {CascadeType.REMOVE})
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<WeeklyReport> weeklyReports = new ArrayList<>();

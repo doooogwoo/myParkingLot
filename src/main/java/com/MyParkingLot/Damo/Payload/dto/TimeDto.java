@@ -14,14 +14,14 @@ public class TimeDto {
 
 
     @Column(nullable = false)
-    private String lastGameTime;
+    private String recordHistory;;
 
     @Getter
     @Column(nullable = false)
     private long lastRealTimestamp;  // 現實時間戳記
 
-    public void setLastGameTime(String lastGameTime) {
-        this.lastGameTime = lastGameTime;
+    public void setLastGameTime(String recordHistory) {
+        this.recordHistory = recordHistory;
     }
 
     public long getLastRealTimestamp() {
