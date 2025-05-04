@@ -1,7 +1,7 @@
 package com.MyParkingLot.Damo.Service.Command;
 
 import com.MyParkingLot.Damo.Repository.VehicleRepository;
-import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
+//import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
 import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import com.MyParkingLot.Damo.Service.websocket.WebSocketService;
 import com.MyParkingLot.Damo.Service.orchestrator.parkingService.ParkingService;

@@ -40,7 +40,7 @@ public class ResetServiceImpl implements ResetService{
         vehicleRepository.deleteAllInBatch();
         parkingSpaceRepository.deleteAllInBatch();
         parkingLotRepository.deleteAllInBatch();
-        playerRepository.deleteAll();
+        playerRepository.deleteAllInBatch();
 
         //parkingLotFactory.initParkingLot("Origin Lot");交給init player
     }

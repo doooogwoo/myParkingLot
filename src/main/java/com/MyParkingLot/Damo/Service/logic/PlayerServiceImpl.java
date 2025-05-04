@@ -4,12 +4,10 @@ import com.MyParkingLot.Damo.Exception.APIException;
 import com.MyParkingLot.Damo.Exception.ResourceNotFoundException;
 import com.MyParkingLot.Damo.Payload.dto.PlayerDto;
 import com.MyParkingLot.Damo.Repository.PlayerRepository;
-import com.MyParkingLot.Damo.Service.factory.ParkingLotFactory;
 import com.MyParkingLot.Damo.Service.factory.PlayerFactory;
 import com.MyParkingLot.Damo.domain.Model.Player;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -23,13 +21,18 @@ public class PlayerServiceImpl implements PlayerService{
     @Transactional
     public void initPlayer(String name) {
         // 先確認有沒有玩家，不重複新增
-        boolean playerExists = playerRepository.existsById(1);
-        if (playerExists) {
+        //boolean playerExists = playerRepository.existsById(1);
+        if (playerExists()) {
             System.out.println("⚠️ 玩家已存在，不再初始化！");
             throw new APIException("玩家已經存在!!！");
         }
         resetService.resetGameData();
         playerFactory.initPlayer(name);
+    }
+
+    @Override
+    public boolean playerExists(){
+      return playerRepository.existsById(1);
     }
 
     @Override

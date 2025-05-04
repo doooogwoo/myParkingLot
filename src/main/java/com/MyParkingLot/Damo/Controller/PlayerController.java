@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/player")
 @RequiredArgsConstructor
@@ -23,5 +26,15 @@ public class PlayerController {
         playerService.initPlayer(playerName);
         String massage = "Player" + playerName +" init success!";
         return new  ResponseEntity<>(massage, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/isPlayerFirstTime")
+    public ResponseEntity<Map<String,Object>> playerRecord(){
+        boolean isExist = playerService.playerExists();
+        String status = "玩家" + (isExist ? "已有遊戲紀錄" : "第一次遊戲");
+        Map<String,Object> message = new HashMap<>();
+        message.put("exist",isExist);
+        message.put("status",status);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 }

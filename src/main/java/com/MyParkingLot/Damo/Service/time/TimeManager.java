@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 public class TimeManager {
-    private static final int TIME_SCALE = 240; // 1 秒 = 4 分鐘
+    private static final int TIME_SCALE = 3600;
+            //240; // 1 秒 = 4 分鐘
     private LocalDateTime gameStartTime;
     private final LocalDateTime INIT_GAME_TIME = LocalDateTime.of(2030, 4, 5, 0, 0);
     private long startNanoTime;
@@ -31,7 +32,7 @@ public class TimeManager {
         long elapsedRealSeconds = (System.nanoTime() - startNanoTime) / 1_000_000_000;
         long elapsedGameSeconds = elapsedRealSeconds * TIME_SCALE;
         log.info("getCurrentGameTime 測試: {} (換算: {})",
-                elapsedGameSeconds, formatGameDuration(elapsedGameSeconds));
+                gameStartTime.plusSeconds(elapsedGameSeconds), formatGameDuration(elapsedGameSeconds));
         return gameStartTime.plusSeconds(elapsedGameSeconds);
     }
     public String formatGameDuration(long gameSeconds) {

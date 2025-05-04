@@ -10,8 +10,6 @@ import com.MyParkingLot.Damo.Repository.VehicleRepository;
 import com.MyParkingLot.Damo.Service.FeeStrategy.FeeStrategy;
 import com.MyParkingLot.Damo.Service.FeeStrategy.FeeStrategyFactory;
 import com.MyParkingLot.Damo.Service.logic.ParkingTicketServiceImpl;
-import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
-import com.MyParkingLot.Damo.Service.observer.VehicleEvent;
 import com.MyParkingLot.Damo.Service.time.TimeManager;
 import com.MyParkingLot.Damo.domain.Model.*;
 import jakarta.transaction.Transactional;
@@ -32,7 +30,7 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingTicketServiceImpl parkingTicketService;
     private final ParkingLotRepository parkingLotRepository;
     private final FeeStrategyFactory feeStrategyFactory;
-    private final ParkingLotIncome parkingLotIncome;
+    //private final ParkingLotIncome parkingLotIncome;
 
     @Transactional
     @Override //（指派 → 設定 → 驗證 → 儲存）
@@ -62,8 +60,17 @@ public class ParkingServiceImpl implements ParkingService {
         //先找車
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", "vehicleId", vehicleId));
-        //再找對應車輛的停車場
+        //再找對應車輛的停車位
         ParkingSpace parkingSpace = vehicle.getParkingSpace();
+        ParkingLot lot = parkingSpace.getParkingLot();
+
+        //為了解決記憶體問題
+        //--->從 repository 重新抓出正確的 lot instance
+        // （與 observer 清單一致）
+        //Long lotId = parkingSpace.getParkingLot().getParkingLotId();
+        //ParkingLot lot =parkingLotRepository.findById(lotId)
+                //.orElseThrow(() -> new ResourceNotFoundException("ParkingLot", "id", lotId));
+        //vehicle.setParkingLot(lot);
 
         //得到費用--> int getSpaceIncome
         parkingSpace.setSpaceIncome(getSpaceIncome(vehicle));
@@ -79,13 +86,14 @@ public class ParkingServiceImpl implements ParkingService {
         log.info("🚗 車輛 {} 已離場，停車費用為 {}，離開車位 {}",
                 vehicle.getLicense(), parkingSpace.getSpaceIncome(), parkingSpace.getParkingSpaceId());
         //離場流程結束後產生停車事件，通知
-        VehicleEvent event = new VehicleEvent(vehicle,parkingSpace.getSpaceIncome());
+        int spaceIcome = parkingSpace.getSpaceIncome();
+        //VehicleEvent event = new VehicleEvent(vehicle,spaceIcome);
         //parkingLotIncome（Subject）--->通知所有已經註冊的觀察者（Observer)(像是parkingLot)
         //「嘿，有一個新的事件發生了！請你們各自看看要不要處理！」
-        parkingLotIncome.notifyObservers(event);
-        ParkingLot lot = parkingSpace.getParkingLot();
+        //parkingLotIncome.notifyObservers(event);
+        lot.addIncome(spaceIcome);
         parkingLotRepository.save(lot);
-        log.info("停車場目前收入 {}",lot.getIncome());
+        log.info("停車場名稱: {} ---> 停車場目前收入 {}",lot.getParkingLotName(),lot.getIncome());
     }
 
     //計算費用

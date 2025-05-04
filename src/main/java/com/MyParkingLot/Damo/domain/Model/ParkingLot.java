@@ -1,8 +1,6 @@
 package com.MyParkingLot.Damo.domain.Model;
 
 import com.MyParkingLot.Damo.Exception.APIException;
-import com.MyParkingLot.Damo.Service.observer.ParkingObserver;
-import com.MyParkingLot.Damo.Service.observer.VehicleEvent;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-public class ParkingLot implements ParkingObserver {
+public class ParkingLot {//implements ParkingObserver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long parkingLotId;
@@ -62,8 +60,10 @@ public class ParkingLot implements ParkingObserver {
         this.income += amount;
     }
 
-    @Override
-    public void update(VehicleEvent event) {
-        addIncome(event.getIncome());
-    }
+//    @Override
+//    public void update(VehicleEvent event) {
+//        System.out.println("📩 收到通知的 lot 是：" +
+//                this.getParkingLotName() + "@" + System.identityHashCode(this));
+//        addIncome(event.getIncome());
+//    }
 }

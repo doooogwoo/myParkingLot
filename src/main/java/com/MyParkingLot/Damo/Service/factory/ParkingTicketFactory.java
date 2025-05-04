@@ -18,7 +18,6 @@ public class ParkingTicketFactory {
         parkingTicket.setRate(30);
         parkingTicket.assignParkingLot(parkingLot);
         parkingTicketRepository.save(parkingTicket);
-        System.out.println("🪄ticket已存入db");
         return parkingTicket;
     }
 

@@ -6,5 +6,7 @@ public interface PlayerService {
 
     void initPlayer(String name);
 
+    boolean playerExists();
+
     PlayerDto getPlayerInfo();
 }
