@@ -13,7 +13,7 @@ public class VehicleGameScheduler {
 
     private final ParkingServiceFactory parkingServiceFactory;
     private final VehicleCommandManager vehicleCommandManager;
-    private boolean isRunning=false;
+    private boolean isRunning = false;
 
 
     public void tick() {

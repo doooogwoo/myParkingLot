@@ -1,6 +1,10 @@
 package com.MyParkingLot.Damo.Service.factory;
 
 //import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
+
+import com.MyParkingLot.Damo.Exception.APIException;
+import com.MyParkingLot.Damo.Payload.dto.location.LocationInfo;
+import com.MyParkingLot.Damo.Service.logic.location.CityLocationManager;
 import com.MyParkingLot.Damo.domain.Model.ParkingLot;
 import com.MyParkingLot.Damo.domain.Model.ParkingSpace;
 import com.MyParkingLot.Damo.domain.Model.ParkingTicket;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +27,8 @@ public class ParkingLotFactory {
     private final ParkingTicketFactory parkingTicketFactory;
     private final ParkingTicketRepository parkingTicketRepository;
     //private final ParkingLotIncome parkingLotIncome;
+    private final CityLocationManager location;
+
     private ParkingLot buildParkingLot(String name, int floors, int spacePerFloor) {
         ParkingLot lot = new ParkingLot();
         lot.setParkingLotName(name);
@@ -41,24 +48,36 @@ public class ParkingLotFactory {
 
     public ParkingLot initParkingLot(String parkingLotName) {
         ParkingLot lot = buildParkingLot(parkingLotName, 1, 50);
-        //log.info("🪄lot 建立完成: {}", lot);
         parkingLotRepository.save(lot);
-        //log.info("🪄lot 存入DB，ID={}", lot.getParkingLotId());
         ParkingTicket ticket = parkingTicketFactory.generateTicket(lot);
-        //log.info("🪄ticket 建立並存入DB，綁定ParkingLot ID={}", ticket.getParkingLot().getParkingLotId());
-
         lot.setParkingTicket(ticket);
 
-        lot.setX(100);
-        lot.setY(100);
+        LocationInfo info = location.getLocationInfo("L1");
+        if (info == null || info.isUsed()){
+            throw new APIException("L1 初始地點無法使用(不存在或已占用)");
+        }
+        lot.setLocationId("L1");
+        lot.setY(info.getY());
+        lot.setX(info.getX());
+        location.setUsed("L1",true);
+
         parkingLotRepository.save(lot);
-        //log.info("🪄lot更新完ticket後再次存入DB");
         return lot;
     }
 
     public ParkingLot createParkingLot(String parkingLotName, int ticketPrice) {
         ParkingLot lot = buildParkingLot(parkingLotName, 1, 50);
 
+        //配置地點(隨機)
+        Map.Entry<String,LocationInfo> infoEntry = location.getRandomAvailableLocation();
+        LocationInfo info = infoEntry.getValue();
+
+        lot.setLocationId(infoEntry.getKey());
+        lot.setX(info.getX());
+        lot.setY(info.getY());
+        location.setUsed(infoEntry.getKey(), true);//記得標記
+
+        //綁票價
         ParkingTicket ticket = new ParkingTicket();
         ticket.setParkingLot(lot);
         ticket.setRate(ticketPrice);

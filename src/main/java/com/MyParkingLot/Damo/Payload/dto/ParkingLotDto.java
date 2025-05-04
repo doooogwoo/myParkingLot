@@ -3,9 +3,10 @@ package com.MyParkingLot.Damo.Payload.dto;
 import lombok.Data;
 
 import java.util.List;
+
 @Data
 public class ParkingLotDto {
-   private Long parkingLotId;
+    private Long parkingLotId;
     private String parkingLotName;
     private int capacity;
     private int income; //收入
@@ -19,6 +20,11 @@ public class ParkingLotDto {
     private ParkingTicketDto parkingTicketDto;
     private Long playerId;
     private List<ParkingSpaceDto> parkingSpaceList;
- private String createAt;
+    private String createAt;
+
+    //地點
+    private String locationId;
+    private int x;
+    private int y;
 
 }
