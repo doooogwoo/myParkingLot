@@ -48,6 +48,9 @@ public class ParkingLotFactory {
         //log.info("🪄ticket 建立並存入DB，綁定ParkingLot ID={}", ticket.getParkingLot().getParkingLotId());
 
         lot.setParkingTicket(ticket);
+
+        lot.setX(100);
+        lot.setY(100);
         parkingLotRepository.save(lot);
         //log.info("🪄lot更新完ticket後再次存入DB");
         return lot;

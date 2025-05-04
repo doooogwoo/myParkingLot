@@ -1,9 +1,9 @@
 package com.MyParkingLot.Damo.Service;
 
 import com.MyParkingLot.Damo.Service.Command.LeaveVehicleCommand;
-import com.MyParkingLot.Damo.Service.observer.ParkingCenter;
-import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
-import com.MyParkingLot.Damo.Service.observer.VehicleEvent;
+//import com.MyParkingLot.Damo.Service.observer.ParkingCenter;
+//import com.MyParkingLot.Damo.Service.observer.ParkingLotIncome;
+//import com.MyParkingLot.Damo.Service.observer.VehicleEvent;
 import com.MyParkingLot.Damo.domain.Model.ParkingLot;
 import com.MyParkingLot.Damo.domain.Model.Vehicle;
 import org.junit.jupiter.api.Test;

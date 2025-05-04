@@ -46,9 +46,9 @@ public class VehicleCommandManagerTest {
         v2.setParkingLot(lot);
 
         //開始模擬
-        VehicleCommand cmd1 = new EnterVehicleCommand(v1,parkingService,webSocketService,vehicleRepository);
-        VehicleCommand cmd2 = new EnterVehicleCommand(v2,parkingService,webSocketService,vehicleRepository);
-        VehicleCommand cmd3 = new LeaveVehicleCommand(v1,parkingService,webSocketService);
+        VehicleCommand cmd1 = new EnterVehicleCommand(v1,parkingService,vehicleRepository);
+        VehicleCommand cmd2 = new EnterVehicleCommand(v2,parkingService,vehicleRepository);
+        VehicleCommand cmd3 = new LeaveVehicleCommand(v1,parkingService);
 
         //加入manager管理
         commandManager.addCommand(cmd1);
@@ -88,7 +88,7 @@ public class VehicleCommandManagerTest {
         lot.setParkingLotId(5L);
         v1.setParkingLot(lot);
 
-        VehicleCommand cmd1 = new EnterVehicleCommand(v1, parkingService, webSocketService,vehicleRepository);
+        VehicleCommand cmd1 = new EnterVehicleCommand(v1, parkingService,vehicleRepository);
         commandManager.addCommand(cmd1);
 
         commandManager.runOne();

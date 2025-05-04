@@ -26,11 +26,16 @@ public class ParkingLot {//implements ParkingObserver {
     private int expenses; //維修費用
     private int floors;
 
+
     private String events;
     private boolean isFull;
     private boolean isHandicapFull;
     private boolean isElectricFull;
     private double handicapBonus;
+
+    //---->地圖點
+    private int x;
+    private int y;
 
     @OneToMany(mappedBy = "parkingLot",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     @ToString.Exclude

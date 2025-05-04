@@ -35,7 +35,7 @@ public class VehicleCommandTest {
 
     @Test
     void testExecute_shouldCallLeaveAndSendWebSocket(){
-        LeaveVehicleCommand command = new LeaveVehicleCommand(mockVehicle,parkingService,webSocketService);
+        LeaveVehicleCommand command = new LeaveVehicleCommand(mockVehicle,parkingService);
 
         command.execute();
 
@@ -48,7 +48,7 @@ public class VehicleCommandTest {
 
     @Test
     void testExecute_shouldCallEnterAndSendWebSocket(){
-        EnterVehicleCommand command = new EnterVehicleCommand(mockVehicle,parkingService,webSocketService,vehicleRepository);
+        EnterVehicleCommand command = new EnterVehicleCommand(mockVehicle,parkingService,vehicleRepository);
 
         command.execute();
 

@@ -12,18 +12,18 @@ public class LeaveVehicleCommand implements VehicleCommand{
     //具體邏輯 -->入場
     private  final Vehicle vehicle;
     private final ParkingService parkingService;
-    private final WebSocketService webSocketService;
-    public LeaveVehicleCommand(Vehicle vehicle, ParkingService parkingService, WebSocketService webSocketService) {
+    //private final WebSocketService webSocketService;
+    public LeaveVehicleCommand(Vehicle vehicle, ParkingService parkingService) {
         this.vehicle = vehicle;
         this.parkingService = parkingService;
-        this.webSocketService = webSocketService;
+        //this.webSocketService = webSocketService;
     }
 
     @Override
     public void execute() {
         Long lotId = vehicle.getParkingLot().getParkingLotId();//因維離場會變null，要先存起來
         parkingService.vehicleLeaving(vehicle.getVehicleId());
-        webSocketService.sendParkingLotSpaceUpdate(lotId);
+        //webSocketService.sendParkingLotSpaceUpdate(lotId);
         log.info("🔔 WebSocket 正在推播車位更新...");
 
     }

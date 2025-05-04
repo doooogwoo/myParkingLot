@@ -76,7 +76,7 @@ public class ParkingServiceFactory {
         log.info("偵錯debug 1  {}", vehicle.getLicense());
         debugVehicleStatus(vehicle);
         vehicleCommandManager.addCommand
-                (new EnterVehicleCommand(vehicle, parkingService, webSocketService,vehicleRepository));
+                (new EnterVehicleCommand(vehicle, parkingService,vehicleRepository));
 
         log.info("已將車輛 {} 加入進場指令佇列", vehicle.getLicense());
         log.info("偵錯debug 2  {}", vehicle.getLicense());
@@ -126,7 +126,7 @@ public class ParkingServiceFactory {
 
                     //以命令模式進行離場
                     vehicleCommandManager.addCommand(
-                            new LeaveVehicleCommand(vehicle, parkingService, webSocketService));
+                            new LeaveVehicleCommand(vehicle, parkingService));
                     log.debug("📍 DEBUG 車輛 {} 是否完成指派？Lot={}, Space={}",
                             vehicle.getLicense(),
                             vehicle.getParkingLot() != null,

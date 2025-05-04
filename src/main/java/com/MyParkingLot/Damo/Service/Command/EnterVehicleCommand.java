@@ -16,13 +16,13 @@ public class EnterVehicleCommand implements VehicleCommand{
     //具體邏輯 -->入場
     private final Vehicle vehicle;
     private final ParkingService parkingService;
-    private final WebSocketService webSocketService;
+    //private final WebSocketService webSocketService;
     private final VehicleRepository vehicleRepository;
-    public EnterVehicleCommand(Vehicle vehicle, ParkingService parkingService, WebSocketService webSocketService,
+    public EnterVehicleCommand(Vehicle vehicle, ParkingService parkingService, //WebSocketService webSocketService,
                                VehicleRepository vehicleRepository) {
         this.vehicle = vehicle;
         this.parkingService = parkingService;
-        this.webSocketService = webSocketService;
+        //this.webSocketService = webSocketService;
         this.vehicleRepository = vehicleRepository;
     }
 
@@ -31,7 +31,7 @@ public class EnterVehicleCommand implements VehicleCommand{
         vehicleRepository.save(vehicle);
         parkingService.vehicleEntering(vehicle);
         Long lotId = vehicle.getParkingLot().getParkingLotId();
-        webSocketService.sendParkingLotSpaceUpdate(lotId);
+        //webSocketService.sendParkingLotSpaceUpdate(lotId);
     }
 
     @Override

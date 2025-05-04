@@ -29,7 +29,7 @@ public class CommandController {
     @PostMapping("/enter")
     public ResponseEntity<String> enterVehicleCommand() {
         Vehicle vehicle = vehicleFactory.generateVehicle();
-        VehicleCommand vehicleCommand = new EnterVehicleCommand(vehicle, parkingService,webSocketService,vehicleRepository);
+        VehicleCommand vehicleCommand = new EnterVehicleCommand(vehicle, parkingService,vehicleRepository);
         commandManager.addCommand(vehicleCommand);
         return new ResponseEntity<String>("已加入進場指令", HttpStatus.OK);
     }
