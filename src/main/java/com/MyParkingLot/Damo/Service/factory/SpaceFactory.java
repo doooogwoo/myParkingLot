@@ -28,7 +28,7 @@ public class SpaceFactory {
                 parkingSpace.setParkingLot(parkingLot);
                 parkingSpace.setParkingSpaceType(ParkingSpaceType.BaseParkingSpace);
                 parkingSpace.setSpaceIncome(0);
-                parkingSpace.setFloor(floor); // 👈 樓層設定
+                parkingSpace.setFloor(floor);
                 spaces.add(parkingSpace);
             }
         }

@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,5 +44,21 @@ public class ParkingLotController {
     public ResponseEntity<List<LocationMapDto>> getLocationInfo(){
         List<LocationMapDto> dtoList = locationService.getLocationInfo();
         return ResponseEntity.ok(dtoList);
+    }
+
+    @GetMapping("/getLotNameByLocationId/{id}")
+    public ResponseEntity<LocationMapDto> getLotNameByLocationId(@PathVariable String id){
+        LocationMapDto dto = locationService.getLotName(id);
+//        String message = id + " 對應的停車場為: " + dto.getParkingLotMame();
+//        Map<LocationMapDto,String> map = new HashMap<>();
+//        map.put(dto,message);
+        return ResponseEntity.ok(dto);
+    }
+
+    //從停車場地點的key撈資料(ex:L1...)
+    @GetMapping("/getInfoByLocationLotId/{id}")
+    public ResponseEntity<ParkingLotDto> getParkingLotInfoByLocationLotId(@PathVariable String id){
+        ParkingLotDto parkingLotDto = parkingLotService.getParkingLotInfoByLocationLotId(id);
+        return ResponseEntity.ok(parkingLotDto);
     }
 }

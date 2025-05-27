@@ -9,4 +9,6 @@ import java.util.List;
 public interface LocationService {
 
     List<LocationMapDto> getLocationInfo();
+
+    LocationMapDto getLotName(String id);
 }

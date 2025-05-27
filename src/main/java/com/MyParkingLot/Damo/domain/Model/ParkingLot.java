@@ -34,6 +34,7 @@ public class ParkingLot {//implements ParkingObserver {
     private double handicapBonus;
 
     //---->地圖點
+    @Column(name = "location_id")
     private String locationId;
     private int x;
     private int y;

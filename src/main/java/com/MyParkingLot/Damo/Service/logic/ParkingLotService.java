@@ -9,4 +9,6 @@ public interface ParkingLotService {
     void buildParkingLot(String parkingname, int ticketFee);
 
     ParkingLotDto getParkingLotInfoById(Long id);
+
+    ParkingLotDto getParkingLotInfoByLocationLotId(String locationLotId);
 }

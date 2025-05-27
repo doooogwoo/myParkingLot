@@ -103,6 +103,13 @@ public class CityLocationManager {
                 .map(entry -> {
                     LocationMapDto dto = mapper.map(entry.getValue(), LocationMapDto.class);
                     dto.setLotId(entry.getKey());
+
+                    parkingLotRepository.findByLocationId(entry.getKey())
+                            .ifPresentOrElse(
+                                    lot -> dto.setParkingLotName(lot.getParkingLotName()),
+                                    () -> dto.setParkingLotName("尚未解鎖停車場")
+                            );
+
                     return dto;
                 })
                 .collect(Collectors.toList());

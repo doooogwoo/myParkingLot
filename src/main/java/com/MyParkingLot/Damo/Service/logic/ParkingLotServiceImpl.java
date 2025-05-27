@@ -27,8 +27,17 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     }
 
     @Override
-    public ParkingLotDto getParkingLotInfoById(Long id) {
-        ParkingLot parkingLot = parkingLotRepository.findById(id)
+    public ParkingLotDto getParkingLotInfoById(Long parkingLotId) {
+        ParkingLot parkingLot = parkingLotRepository.findById(parkingLotId)
+                .orElseThrow(() -> new APIException("找不到停車場"));
+        ParkingLotDto parkingLotDto = mapper.map(parkingLot,ParkingLotDto.class);
+        return parkingLotDto;
+    }
+
+
+    @Override
+    public ParkingLotDto getParkingLotInfoByLocationLotId(String locationLotId) {
+        ParkingLot parkingLot = parkingLotRepository.findByLocationId(locationLotId)
                 .orElseThrow(() -> new APIException("找不到停車場"));
         ParkingLotDto parkingLotDto = mapper.map(parkingLot,ParkingLotDto.class);
         return parkingLotDto;

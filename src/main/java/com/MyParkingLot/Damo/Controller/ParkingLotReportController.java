@@ -2,6 +2,7 @@ package com.MyParkingLot.Damo.Controller;
 
 import com.MyParkingLot.Damo.Payload.dto.ReportDto;
 import com.MyParkingLot.Damo.Service.orchestrator.report.ReportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,9 @@ import java.util.List;
 ///api/report/generate/{id} → 產生指定停車場的報表
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ParkingLotReportController {
     private final ReportService reportService;
-    @Autowired
-    public ParkingLotReportController(ReportService reportService) {
-        this.reportService = reportService;
-    }
 
     @GetMapping("/getAllReports")//顯示全部停車場，還有基本報表
     public ResponseEntity<List<ReportDto>> getAllParkingLotReport(){

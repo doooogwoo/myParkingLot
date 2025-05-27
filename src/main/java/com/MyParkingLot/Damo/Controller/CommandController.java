@@ -46,3 +46,7 @@ public class CommandController {
         return new ResponseEntity<String>("已執行一筆指令", HttpStatus.OK);
     }
 }
+
+
+
+

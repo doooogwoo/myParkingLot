@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LocationMapDto {
+    private String parkingLotName;
     private String lotId;
     private int x;
     private int y;
