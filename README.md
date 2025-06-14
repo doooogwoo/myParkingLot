@@ -30,7 +30,7 @@
 
 ## 📁 資料夾架構
 
-\`\`\`bash
+```bash
 Damo/
 ├── Controller/           # REST API 控制器
 ├── domain/Model/         # 核心實體（ParkingLot, Vehicle, Player 等）
@@ -41,9 +41,7 @@ Damo/
 │   ├── websocket/        # 推播服務
 ├── Config/               # 跨域與 WebSocket 設定
 ├── Exception/            # 全域例外與錯誤碼處理
-\`\`\`
-
----
+```
 
 ## 🚗 常用 API
 
