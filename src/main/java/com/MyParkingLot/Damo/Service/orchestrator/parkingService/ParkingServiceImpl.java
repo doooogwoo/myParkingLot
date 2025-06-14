@@ -7,6 +7,7 @@ import com.MyParkingLot.Damo.Exception.ResourceNotFoundException;
 import com.MyParkingLot.Damo.Repository.ParkingLotRepository;
 import com.MyParkingLot.Damo.Repository.ParkingSpaceRepository;
 import com.MyParkingLot.Damo.Repository.VehicleRepository;
+import com.MyParkingLot.Damo.Repository.WeeklyReportRepository;
 import com.MyParkingLot.Damo.Service.FeeStrategy.FeeStrategy;
 import com.MyParkingLot.Damo.Service.FeeStrategy.FeeStrategyFactory;
 import com.MyParkingLot.Damo.Service.logic.ParkingTicketServiceImpl;
@@ -30,6 +31,8 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingTicketServiceImpl parkingTicketService;
     private final ParkingLotRepository parkingLotRepository;
     private final FeeStrategyFactory feeStrategyFactory;
+    private final WeeklyReportRepository weeklyReportRepository;
+//    private final WeeklyReport weeklyReport;
     //private final ParkingLotIncome parkingLotIncome;
 
     @Transactional
@@ -73,7 +76,9 @@ public class ParkingServiceImpl implements ParkingService {
         //vehicle.setParkingLot(lot);
 
         //得到費用--> int getSpaceIncome
+        //得到時數
         parkingSpace.setSpaceIncome(getSpaceIncome(vehicle));
+        int hour = (int) vehicle.getParkingDuration().toHours();
 
         //驗證 & 清空關聯
         parkingSpace.unassignVehicle();
@@ -87,11 +92,14 @@ public class ParkingServiceImpl implements ParkingService {
                 vehicle.getLicense(), parkingSpace.getSpaceIncome(), parkingSpace.getParkingSpaceId());
         //離場流程結束後產生停車事件，通知
         int spaceIcome = parkingSpace.getSpaceIncome();
+
+
         //VehicleEvent event = new VehicleEvent(vehicle,spaceIcome);
         //parkingLotIncome（Subject）--->通知所有已經註冊的觀察者（Observer)(像是parkingLot)
         //「嘿，有一個新的事件發生了！請你們各自看看要不要處理！」
         //parkingLotIncome.notifyObservers(event);
         lot.addIncome(spaceIcome);
+        lot.addUsedTime(hour);
         parkingLotRepository.save(lot);
         log.info("停車場名稱: {} ---> 停車場目前收入 {}",lot.getParkingLotName(),lot.getIncome());
     }

@@ -26,7 +26,6 @@ public class ReportFactory {
         // 2. 計算當週週期起始點與結束點
         LocalDateTime weekStart = calculateWeekStart(parkingLot.getCreateAt(), gameNow);
         LocalDateTime weekEnd = weekStart.plusDays(7);
-
         // 3. 撈資料：該週離場車輛紀錄
         List<Vehicle> vehicles = vehicleRepository
                 .findVehiclesByParkingLotAndActualLeaveTimeBetween(parkingLotId, weekStart, weekEnd);

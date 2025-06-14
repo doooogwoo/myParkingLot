@@ -23,8 +23,10 @@ public class ParkingLot {//implements ParkingObserver {
 
     private int capacity;
     private int income = 0; //收入
+    private int reportVehicleTotal;//當週停車總數
     private int expenses; //維修費用
     private int floors;
+    private int totalUsedTime = 0;
 
 
     private String events;
@@ -65,6 +67,13 @@ public class ParkingLot {//implements ParkingObserver {
             throw new APIException("停車費不能為負!!");
         }
         this.income += amount;
+    }
+
+    public void addUsedTime(int usedTime){
+        if (usedTime <0){
+            throw new APIException("時數不能為負!!");
+        }
+        this.totalUsedTime += usedTime;
     }
 
 //    @Override
