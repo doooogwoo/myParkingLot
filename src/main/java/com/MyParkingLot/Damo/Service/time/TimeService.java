@@ -9,7 +9,7 @@ public interface TimeService {
 //    TimeDto saveGameTime(TimeDto timeDto);
 
     //查詢時間
-    public String getFormattedCurrentGameTime() ;
+    public String getFormattedCurrentGameTime();
 
     // 存檔遊戲時間/及時更新遊戲進度
     TimeDto saveGameTime();
@@ -18,4 +18,11 @@ public interface TimeService {
 
 
     TimeDto resetGame();
+
+    void pauseGame();
+
+    void resumeGame();
+
+    // 檢查目前是否為暫停狀太
+    boolean isGamePaused();
 }

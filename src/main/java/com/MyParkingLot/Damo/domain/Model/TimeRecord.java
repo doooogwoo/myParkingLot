@@ -34,19 +34,4 @@ public class TimeRecord {
         this.lastRealTimestamp = lastRealTimestamp;
     }
 
-//    public LocalDateTime getLastGameTime() {
-//        return lastGameTime;
-//    }
-//
-//    public void setLastGameTime(LocalDateTime lastGameTime) {
-//        this.lastGameTime = lastGameTime;
-//    }
-//
-//    public long getLastRealTimestamp() {
-//        return lastRealTimestamp;
-//    }
-//
-//    public void setLastRealTimestamp(long lastRealTimestamp) {
-//        this.lastRealTimestamp = lastRealTimestamp;
-//    }
 }

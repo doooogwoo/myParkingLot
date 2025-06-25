@@ -17,40 +17,55 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TimeController {
     private final TimeService timeService;
-    private final VehicleGameScheduler vehicleGameScheduler;
     private final ResetService resetService;
+
     @GetMapping("/getCurrentTime") //--->查詢當前時間
-    public ResponseEntity<String> getCurrentTime(){
+    public ResponseEntity<String> getCurrentTime() {
         String timeDtoNow = timeService.getFormattedCurrentGameTime();
-        return new ResponseEntity<>(timeDtoNow,HttpStatus.OK);
+        return new ResponseEntity<>(timeDtoNow, HttpStatus.OK);
     }
 
     @PostMapping("/saveTimeRecord") //-->存檔
-    public ResponseEntity<TimeDto> saveTime(){
+    public ResponseEntity<TimeDto> saveTime() {
         TimeDto time = timeService.saveGameTime();
-        return new ResponseEntity<>(time,HttpStatus.OK);
+        return new ResponseEntity<>(time, HttpStatus.OK);
     }
 
 
     @PostMapping("/startGame") //---->開始遊戲
-    public ResponseEntity<TimeDto> startGame(){
-        TimeDto startTimeDto = timeService.startGame();
-        vehicleGameScheduler.setRunning(true);
-        return new ResponseEntity<>(startTimeDto,HttpStatus.OK);
+    public ResponseEntity<String> startGame() {
+//        TimeDto startTimeDto = timeService.startGame();
+//        vehicleGameScheduler.setRunning(true);
+        timeService.resumeGame();
+        String timeDtoNow = timeService.getFormattedCurrentGameTime();
+        String message =
+                "<遊戲開始> :  時間與車輛模擬已開始。目前時間: " + timeDtoNow;
+        log.info("遊戲開始!!!!!!!!!");
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @PostMapping("/saveAndExit") //-->存檔並結束遊戲
-    public ResponseEntity<TimeDto> saveAndExit(){
-        TimeDto time = timeService.saveGameTime();
-        vehicleGameScheduler.setRunning(false);
+    public ResponseEntity<String> saveAndExit() {
+//        TimeDto time = timeService.saveGameTime();
+//        vehicleGameScheduler.setRunning(false);
+        String timeDtoNow = timeService.getFormattedCurrentGameTime();
+        timeService.pauseGame();
         log.info("存檔並結束遊戲!!!!!!!!!");
-        return new ResponseEntity<>(time,HttpStatus.OK);
+        String message = "<遊戲結束> :  時間與車輛模擬已暫停。目前時間: " + timeDtoNow;
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @PostMapping("/resetGame")//重設遊戲
-    public ResponseEntity<TimeDto> resetGame(){
+    public ResponseEntity<TimeDto> resetGame() {
         TimeDto resetTimeDto = timeService.resetGame();
         resetService.resetGameData();
-        return new ResponseEntity<>(resetTimeDto,HttpStatus.OK);
+        return new ResponseEntity<>(resetTimeDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/gameState")
+    public ResponseEntity<String> gameState() {
+        boolean state = timeService.isGamePaused();
+        String message = state ? "目前時間車流暫停" : "目前時間車流進行中";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }
